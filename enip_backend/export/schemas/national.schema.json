@@ -1,0 +1,324 @@
+{
+  "$id": "https://schema.voteamerica.com/enip/national.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ENIP National Data Schema",
+  "type": "object",
+  "definitions": {
+    "national_summary_p": {
+      "$id": "#national_summary_p",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "party",
+        "winner",
+        "popVote",
+        "popPct",
+        "statesWon",
+        "electWon"
+      ],
+      "properties": {
+        "name": {"type": "string"},
+        "party": {"type": "string"},
+        "winner": {"type": "boolean"},
+        "popVote": {"type": "integer"},
+        "popPct": {"type": "number"},
+        "statesWon": {"type": "integer"},
+        "electWon": {"type": "integer"}
+      }
+    },
+    "national_summary_s": {
+      "$id": "#national_summary_s",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "won",
+        "party"
+      ],
+      "properties": {
+        "won": {"type": "integer"},
+        "party": {"type": "string"}
+      }
+    },
+    "national_summary_h": {
+      "$id": "#national_summary_h",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "won",
+        "party"
+      ],
+      "properties": {
+        "won": {"type": "integer"},
+        "party": {"type": "string"}
+      }
+    },
+    "state_summary_p": {
+      "$id": "#state_summary_p",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "party",
+        "winner",
+        "popVote",
+        "popPct",
+        "popVoteHistory"
+      ],
+      "properties": {
+        "name": {"type": "string"},
+        "party": {"type": "string"},
+        "winner": {"type": "boolean"},
+        "popVote": {"type": "integer"},
+        "popPct": {"type": "number"},
+        "popVoteHistory": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "state_summary_s": {
+      "$id": "#state_summary_s",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "special",
+        "party",
+        "winner",
+        "popVote",
+        "popPct",
+        "popVoteHistory"
+      ],
+      "properties": {
+        "special": {"type": "boolean"},
+        "party": {"type": "string"},
+        "winner": {"type": "boolean"},
+        "popVote": {"type": "integer"},
+        "popPct": {"type": "number"},
+        "popVoteHistory": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "state_summary_h": {
+      "$id": "#state_summary_h",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "district",
+        "party",
+        "winner",
+        "popVote",
+        "popPct",
+        "popVoteHistory"
+      ],
+      "properties": {
+        "district": {"type": "integer"},
+        "party": {"type": "string"},
+        "winner": {"type": "boolean"},
+        "popVote": {"type": "integer"},
+        "popPct": {"type": "number"},
+        "popVoteHistory": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "state_summary": {
+      "$id": "#state_summary",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["P", "H", "S"],
+      "properties": {
+        "P": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state_summary_p" }
+        },
+        "S": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state_summary_s" }
+        },
+        "H": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state_summary_h" }
+        }
+      }
+    },
+    "presidential_cd_summary": {
+      "$id": "#presidential_cd_summary",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["P"],
+      "properties": {
+        "P": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state_summary_p" }
+        }
+      }
+    }
+  },
+  "properties": {
+    "national_summary": {
+      "type": "object",
+      "description": "National summary",
+      "additionalProperties": false,
+      "required": ["P", "H", "S"],
+      "properties": {
+        "P": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/national_summary_p" }
+        },
+        "S": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/national_summary_s" }
+        },
+        "H": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/national_summary_h" }
+        }
+      }
+    },
+    "state_summaries": {
+      "type": "object",
+      "description": "National summary",
+      "additionalProperties": false,
+      "required": [
+        "AL",
+        "AK",
+        "AZ",
+        "AR",
+        "CA",
+        "CO",
+        "CT",
+        "DC",
+        "DE",
+        "FL",
+        "GA",
+        "HI",
+        "ID",
+        "IL",
+        "IN",
+        "IA",
+        "KS",
+        "KY",
+        "LA",
+        "ME",
+        "MD",
+        "MA",
+        "MI",
+        "MN",
+        "MS",
+        "MO",
+        "MT",
+        "NE",
+        "NV",
+        "NH",
+        "NJ",
+        "NM",
+        "NY",
+        "NC",
+        "ND",
+        "OH",
+        "OK",
+        "OR",
+        "PA",
+        "RI",
+        "SC",
+        "SD",
+        "TN",
+        "TX",
+        "UT",
+        "VT",
+        "VA",
+        "WA",
+        "WV",
+        "WI",
+        "WY",
+        "NE-01",
+        "NE-02",
+        "NE-03",
+        "ME-01",
+        "ME-02"
+      ],
+      "properties": {
+        "AL": { "$ref": "#/definitions/state_summary" },
+        "AK": { "$ref": "#/definitions/state_summary" },
+        "AZ": { "$ref": "#/definitions/state_summary" },
+        "AR": { "$ref": "#/definitions/state_summary" },
+        "CA": { "$ref": "#/definitions/state_summary" },
+        "CO": { "$ref": "#/definitions/state_summary" },
+        "CT": { "$ref": "#/definitions/state_summary" },
+        "DC": { "$ref": "#/definitions/state_summary" },
+        "DE": { "$ref": "#/definitions/state_summary" },
+        "FL": { "$ref": "#/definitions/state_summary" },
+        "GA": { "$ref": "#/definitions/state_summary" },
+        "HI": { "$ref": "#/definitions/state_summary" },
+        "ID": { "$ref": "#/definitions/state_summary" },
+        "IL": { "$ref": "#/definitions/state_summary" },
+        "IN": { "$ref": "#/definitions/state_summary" },
+        "IA": { "$ref": "#/definitions/state_summary" },
+        "KS": { "$ref": "#/definitions/state_summary" },
+        "KY": { "$ref": "#/definitions/state_summary" },
+        "LA": { "$ref": "#/definitions/state_summary" },
+        "ME": { "$ref": "#/definitions/state_summary" },
+        "MD": { "$ref": "#/definitions/state_summary" },
+        "MA": { "$ref": "#/definitions/state_summary" },
+        "MI": { "$ref": "#/definitions/state_summary" },
+        "MN": { "$ref": "#/definitions/state_summary" },
+        "MS": { "$ref": "#/definitions/state_summary" },
+        "MO": { "$ref": "#/definitions/state_summary" },
+        "MT": { "$ref": "#/definitions/state_summary" },
+        "NE": { "$ref": "#/definitions/state_summary" },
+        "NV": { "$ref": "#/definitions/state_summary" },
+        "NH": { "$ref": "#/definitions/state_summary" },
+        "NJ": { "$ref": "#/definitions/state_summary" },
+        "NM": { "$ref": "#/definitions/state_summary" },
+        "NY": { "$ref": "#/definitions/state_summary" },
+        "NC": { "$ref": "#/definitions/state_summary" },
+        "ND": { "$ref": "#/definitions/state_summary" },
+        "OH": { "$ref": "#/definitions/state_summary" },
+        "OK": { "$ref": "#/definitions/state_summary" },
+        "OR": { "$ref": "#/definitions/state_summary" },
+        "PA": { "$ref": "#/definitions/state_summary" },
+        "RI": { "$ref": "#/definitions/state_summary" },
+        "SC": { "$ref": "#/definitions/state_summary" },
+        "SD": { "$ref": "#/definitions/state_summary" },
+        "TN": { "$ref": "#/definitions/state_summary" },
+        "TX": { "$ref": "#/definitions/state_summary" },
+        "UT": { "$ref": "#/definitions/state_summary" },
+        "VT": { "$ref": "#/definitions/state_summary" },
+        "VA": { "$ref": "#/definitions/state_summary" },
+        "WA": { "$ref": "#/definitions/state_summary" },
+        "WV": { "$ref": "#/definitions/state_summary" },
+        "WI": { "$ref": "#/definitions/state_summary" },
+        "WY": { "$ref": "#/definitions/state_summary" },
+        "NE-01": { "$ref": "#/definitions/presidential_cd_summary" },
+        "NE-02": { "$ref": "#/definitions/presidential_cd_summary" },
+        "NE-03": { "$ref": "#/definitions/presidential_cd_summary" },
+        "ME-01": { "$ref": "#/definitions/presidential_cd_summary" },
+        "ME-02": { "$ref": "#/definitions/presidential_cd_summary" }
+      }
+    }
+  },
+  "required": ["national_summary", "state_summaries"],
+  "additionalProperties": false
+}

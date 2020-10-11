@@ -1,0 +1,443 @@
+{
+  "national_summary": {
+    "P": [
+      {
+        "name": "Clinton",
+        "party": "Dem",
+        "winner": false,
+        "popVote": 65853516,
+        "popPct": 0.49,
+        "statesWon": 21,
+        "electWon": 232
+      },
+      {
+        "name": "Trump",
+        "party": "GOP",
+        "winner": true,
+        "popVote": 62984825,
+        "popPct": 0.46,
+        "statesWon": 30,
+        "electWon": 306
+      },
+      {
+        "name": "Johnson",
+        "party": "Lib",
+        "winner": false,
+        "popVote": 4489221,
+        "popPct": 0.03,
+        "statesWon": 0,
+        "electWon": 0
+      }
+    ],
+    "S": [
+      {
+        "won": 22,
+        "party": "Dem"
+      },
+      {
+        "won": 11,
+        "party": "GOP"
+      },
+      {
+        "won": 2,
+        "party": "Others"
+      }
+    ],
+    "H": [
+      {
+        "won": 235,
+        "party": "Dem"
+      },
+      {
+        "won": 199,
+        "party": "GOP"
+      },
+      {
+        "won": 0,
+        "party": "Others"
+      }
+    ]
+  },
+  "state_summaries": {
+    "GA": {
+      "P": [
+        {
+          "name": "Clinton",
+          "party": "Dem",
+          "winner": false,
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "name": "Trump",
+          "party": "GOP",
+          "winner": true,
+          "popVote": 74184477,
+          "popPct": 0.474281,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "name": "Hawkins",
+          "party": "Grn",
+          "winner": true,
+          "popVote": 123456,
+          "popPct": 0.01234,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 123456,
+            "2020-11-03T20:30:00Z": 123456,
+            "2020-11-03T21:00:00Z": 123456
+          }
+        }
+      ],
+      "S": [
+        {
+          "special": false,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Dem",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "special": false,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "GOP",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "special": false,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Grn",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "special": true,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Dem",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "special": true,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "GOP",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "special": true,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Grn",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        }
+      ],
+      "H": [
+        {
+          "district": 1,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Dem",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 1,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "GOP",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 1,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Grn",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 2,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Dem",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 2,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "GOP",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 2,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Grn",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        }
+      ]
+    },
+    "NE": {
+      "P": [
+        {
+          "name": "Clinton",
+          "party": "Dem",
+          "winner": false,
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "name": "Trump",
+          "party": "GOP",
+          "winner": true,
+          "popVote": 74184477,
+          "popPct": 0.474281,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "name": "Hawkins",
+          "party": "Grn",
+          "winner": true,
+          "popVote": 123456,
+          "popPct": 0.01234,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 123456,
+            "2020-11-03T20:30:00Z": 123456,
+            "2020-11-03T21:00:00Z": 123456
+          }
+        }
+      ],
+      "S": [
+        {
+          "special": false,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Dem",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "special": false,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "GOP",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "special": false,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Grn",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        }
+      ],
+      "H": [
+        {
+          "district": 1,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Dem",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 1,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "GOP",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 1,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Grn",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 2,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Dem",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 2,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "GOP",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "district": 2,
+          "popVote": 123456,
+          "popPct": 0.4718,
+          "winner": false,
+          "party": "Grn",
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        }
+      ]
+    },
+    "NE-01": {
+      "P": [
+        {
+          "name": "Clinton",
+          "party": "Dem",
+          "winner": false,
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "name": "Trump",
+          "party": "GOP",
+          "winner": true,
+          "popVote": 74184477,
+          "popPct": 0.474281,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        {
+          "name": "Hawkins",
+          "party": "Grn",
+          "winner": true,
+          "popVote": 123456,
+          "popPct": 0.01234,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 123456,
+            "2020-11-03T20:30:00Z": 123456,
+            "2020-11-03T21:00:00Z": 123456
+          }
+        }
+      ]
+    }
+  }
+}
