@@ -15,17 +15,33 @@ CREATE TABLE IF NOT EXISTS ingest_run (
   -- tag the *first* ingest_run of each 30-minute interval with a waypoint_dt
   -- to indicate that data from this ingestion should be used to provide that
   -- historical data.
-  waypoint_dt TIMESTAMPTZ UNIQUE
+  waypoint_30_dt TIMESTAMPTZ UNIQUE,
+  -- We're not using these waypoints *yet* but we're tracking them anyway
+  waypoint_5_dt TIMESTAMPTZ UNIQUE,
+  waypoint_10_dt TIMESTAMPTZ UNIQUE,
+  waypoint_60_dt TIMESTAMPTZ UNIQUE
 );
 
 CREATE INDEX IF NOT EXISTS ingest_run_ingest_dt_idx
   ON ingest_run (ingest_dt);
 
+CREATE INDEX IF NOT EXISTS ingest_run_waypoint_30_dt_idx
+  ON ingest_run (waypoint_30_dt);
+
+CREATE INDEX IF NOT EXISTS ingest_run_waypoint_5_dt_idx
+  ON ingest_run (waypoint_5_dt);
+
+CREATE INDEX IF NOT EXISTS ingest_run_waypoint_10_dt_idx
+  ON ingest_run (waypoint_10_dt);
+
+CREATE INDEX IF NOT EXISTS ingest_run_waypoint_60_dt_idx
+  ON ingest_run (waypoint_60_dt);
+
 
 -- Stores an AP result from an ingestion run
 CREATE TABLE IF NOT EXISTS ap_result (
   -- The ID of the ingestion run this result is from
-  ingest_id INTEGER NOT NULL REFERENCES ingest_run(ingest_id),
+  ingest_id INTEGER NOT NULL REFERENCES ingest_run(ingest_id) ON DELETE CASCADE,
 
   -- The fields we get from elex
   elex_id TEXT NOT NULL,
