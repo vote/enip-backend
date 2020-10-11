@@ -4,9 +4,8 @@ import io
 import csv
 from datetime import datetime, timedelta, timezone
 
-from ..enip_common.config import AP_API_KEY, INGEST_TEST_DATA
+from ..enip_common.config import AP_API_KEY, INGEST_TEST_DATA, ELECTION_DATE
 
-ELECTION_DATE = "2020-11-03"
 OFFICE_IDS = ["P", "S", "H"]
 
 
