@@ -1,0 +1,321 @@
+{
+  "national_summary": {
+    "P": {
+      "dem": {
+        "firstName": "Hillary",
+        "lastName": "Clinton",
+        "popVote": 65853516,
+        "popPct": 0.49,
+        "statesWon": 21,
+        "electWon": 232
+      },
+      "gop": {
+        "firstName": "Hillary",
+        "lastName": "Clinton",
+        "popVote": 65853516,
+        "popPct": 0.49,
+        "statesWon": 21,
+        "electWon": 232
+      },
+      "oth": {
+        "popVote": 65853516,
+        "popPct": 0.49,
+        "statesWon": 21,
+        "electWon": 232
+      },
+      "winner": "dem"
+    },
+    "S": {
+      "dem": {
+        "won": 22
+      },
+      "gop": {
+        "won": 11
+      },
+      "oth": {
+        "won": 0
+      }
+    },
+    "H": {
+      "dem": {
+        "won": 220
+      },
+      "gop": {
+        "won": 110
+      },
+      "oth": {
+        "won": 0
+      }
+    }
+  },
+  "state_summaries": {
+    "MT": {
+      "P": {
+        "dem": {
+          "firstName": "Hillary",
+          "lastName": "Clinton",
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "gop": {
+          "firstName": "Donald",
+          "lastName": "Trump",
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "oth": {
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "winner": "dem",
+        "comments": [
+          {
+            "timestamp": "2020-11-03T20:30:00Z",
+            "author": "Jason K-B",
+            "title": "Foo",
+            "body": "Bar *Baz*"
+          }
+        ]
+      },
+      "S": {
+        "dem": {
+          "firstName": "Hillary",
+          "lastName": "Clinton",
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "gop": {
+          "firstName": "Donald",
+          "lastName": "Trump",
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "oth": {
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "winner": "dem",
+        "multipleDem": false,
+        "multipleGop": false,
+        "comments": [
+          {
+            "timestamp": "2020-11-03T20:30:00Z",
+            "author": "Jason K-B",
+            "title": "Foo",
+            "body": "Bar *Baz*"
+          }
+        ]
+      },
+      "H": {
+        "01": {
+          "dem": {
+            "firstName": "Hillary",
+            "lastName": "Clinton",
+            "popVote": 74437487,
+            "popPct": 0.475899,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "gop": {
+            "firstName": "Donald",
+            "lastName": "Trump",
+            "popVote": 74437487,
+            "popPct": 0.475899,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "oth": {
+            "popVote": 74437487,
+            "popPct": 0.475899,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "winner": "dem",
+          "multipleDem": false,
+          "multipleGop": false,
+          "comments": [
+            {
+              "timestamp": "2020-11-03T20:30:00Z",
+              "author": "Jason K-B",
+              "title": "Foo",
+              "body": "Bar *Baz*"
+            }
+          ]
+        },
+        "AL": {
+          "dem": {
+            "firstName": "Hillary",
+            "lastName": "Clinton",
+            "popVote": 74437487,
+            "popPct": 0.475899,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "gop": {
+            "firstName": "Donald",
+            "lastName": "Trump",
+            "popVote": 74437487,
+            "popPct": 0.475899,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "oth": {
+            "popVote": 74437487,
+            "popPct": 0.475899,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "winner": "dem",
+          "multipleDem": false,
+          "multipleGop": false,
+          "comments": [
+            {
+              "timestamp": "2020-11-03T20:30:00Z",
+              "author": "Jason K-B",
+              "title": "Foo",
+              "body": "Bar *Baz*"
+            }
+          ]
+        }
+      }
+    },
+    "GA-S": {
+      "S": {
+        "dem": {
+          "firstName": "Hillary",
+          "lastName": "Clinton",
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "gop": {
+          "firstName": "Donald",
+          "lastName": "Trump",
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "oth": {
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "winner": "dem",
+        "multipleDem": false,
+        "multipleGop": false,
+        "comments": [
+          {
+            "timestamp": "2020-11-03T20:30:00Z",
+            "author": "Jason K-B",
+            "title": "Foo",
+            "body": "Bar *Baz*"
+          }
+        ]
+      }
+    },
+    "NE-01": {
+      "P": {
+        "dem": {
+          "firstName": "Hillary",
+          "lastName": "Clinton",
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "gop": {
+          "firstName": "Donald",
+          "lastName": "Trump",
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "oth": {
+          "popVote": 74437487,
+          "popPct": 0.475899,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "winner": "dem",
+        "comments": [
+          {
+            "timestamp": "2020-11-03T20:30:00Z",
+            "author": "Jason K-B",
+            "title": "Foo",
+            "body": "Bar *Baz*"
+          }
+        ]
+      }
+    }
+  }
+}
