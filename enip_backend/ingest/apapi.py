@@ -10,10 +10,20 @@ OFFICE_IDS = ["P", "S", "H"]
 
 
 def ingest_ap(cursor, ingest_id):
-    # Make the API request
-    election = Election(
+    # Make the API request. We need to request both reporting-unit-level results,
+    # which gives us everything except NE/ME congressional districts, and
+    # district results for those few results.
+    election_ru = Election(
         testresults=INGEST_TEST_DATA,
-        results_level="ru",
+        resultslevel="ru",
+        officeids=OFFICE_IDS,
+        setzerocounts=False,
+        electiondate=ELECTION_DATE,
+        api_key=AP_API_KEY,
+    )
+    election_district = Election(
+        testresults=INGEST_TEST_DATA,
+        resultslevel="district",
         officeids=OFFICE_IDS,
         setzerocounts=False,
         electiondate=ELECTION_DATE,
@@ -24,19 +34,30 @@ def ingest_ap(cursor, ingest_id):
     csv_file = io.StringIO()
     writer = csv.writer(csv_file)
     n_rows = 0
+    column_headers = None
 
-    for i, obj in enumerate(election.results):
-        row = obj.serialize()
-        row["ingest_id"] = ingest_id
-        row["elex_id"] = row["id"]
-        del row["id"]
+    def process_election_results(results, filter_levels=None):
+        nonlocal n_rows
+        nonlocal column_headers
 
-        if i == 0:
-            column_headers = row.keys()
-            writer.writerow(column_headers)
-        writer.writerow(row.values())
+        for obj in results:
+            row = obj.serialize()
+            row["ingest_id"] = ingest_id
+            row["elex_id"] = row["id"]
+            del row["id"]
 
-        n_rows += 1
+            if column_headers is None:
+                column_headers = row.keys()
+                writer.writerow(column_headers)
+
+            if filter_levels and row["level"] not in filter_levels:
+                continue
+
+            writer.writerow(row.values())
+            n_rows += 1
+
+    process_election_results(election_ru.results)
+    process_election_results(election_district.results, ["district"])
 
     # Run the COPY command to insert the rows
     print(f"Writing {n_rows} rows to Postgres...")

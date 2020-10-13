@@ -108,3 +108,6 @@ CREATE INDEX IF NOT EXISTS ap_result_level_idx
 CREATE INDEX IF NOT EXISTS ap_result_lastupdated_idx
   ON ap_result (lastupdated);
 
+
+CREATE INDEX IF NOT EXISTS ap_result_ingest_id_idx
+  ON ap_result (ingest_id);
