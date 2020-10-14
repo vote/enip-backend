@@ -39,7 +39,7 @@ provider:
     env: ${self:custom.stage}
 
   environment:
-    SENTRY_DSN: ${ssm:/shared/enip/sentry_dsn}
+    SENTRY_DSN: ${ssm:/shared/enip/sentry_dsn~true}
     SENTRY_ENVIRONMENT: ${self:custom.stage}
     POSTGRES_URL: "${ssm:/${self:custom.stage}/enip/db/url~true}"
 
