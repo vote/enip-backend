@@ -7,8 +7,8 @@ verify_ssl = true
 
 [packages]
 elex = "*"
-psycopg2 = "*"
+psycopg2-binary = "*"
 environs = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"
