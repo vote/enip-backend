@@ -9,6 +9,7 @@ verify_ssl = true
 elex = "*"
 psycopg2-binary = "*"
 environs = "*"
+sentry_sdk = "*"
 
 [requires]
 python_version = "3.7"
