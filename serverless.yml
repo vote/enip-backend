@@ -17,7 +17,9 @@ custom:
         'pip',
         'setuptools'
     ]
+
   datadog:
+    forwarder: "${ssm:/shared/enip/datadog_forwarder_arn~true}"
     flushMetricsToLogs: true
 
   prune:
