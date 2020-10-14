@@ -54,7 +54,7 @@ functions:
   hello:
     handler: enip_backend.lambda_handlers.hello
     events:
-      - schedule: "cron(*/1 * * * *)"
+      - schedule: "rate(5 minute)"
     timeout: 60
 
 
