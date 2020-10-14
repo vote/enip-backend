@@ -1,0 +1,67 @@
+service: enip-backend
+
+custom:
+  stage: ${opt:stage, 'staging'}
+  pythonRequirements:
+    dockerizePip: true
+    slim: true
+    useDownloadCache: false
+    noDeploy: [
+        'boto3',
+        'botocore',
+        'docutils',
+        'jmespath',
+        'python-dateutil',
+        's3transfer',
+        'six',
+        'pip',
+        'setuptools'
+    ]
+  datadog:
+    flushMetricsToLogs: true
+
+  prune:
+    automatic: true
+    number: 3
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: us-west-2
+  vpc:
+    subnetIds:
+      - "${ssm:/vpc/subnets/private/id/0~true}"
+      - "${ssm:/vpc/subnets/private/id/1~true}"
+      - "${ssm:/vpc/subnets/private/id/2~true}"
+    securityGroupIds:
+      - "${ssm:/vpc/security-group/default/id~true}"
+  tags:
+    env: ${self:custom.stage}
+
+  environment:
+    # TODO:
+    # SENTRY_DSN: ${ssm:/${self:custom.stage}/enip/sentry_dsn}
+    # SENTRY_ENVIRONMENT: ${self:custom.stage}
+    DB_URL: "${ssm:/${self:custom.stage}/enip/db/url~true}"
+  memorySize: 1024
+
+plugins:
+  - serverless-python-requirements
+  - serverless-prune-plugin
+  - serverless-plugin-datadog
+
+functions:
+  hello:
+    handler: enip_backend.lambda_handlers.hello
+    events:
+      - schedule: "cron(*/1 * * * *)"
+    timeout: 60
+
+
+package:
+  exclude:
+    - 'node_modules/**'
+    - '.vscode/**'
+    - '.mypy_cache/**'
+    - 'package.json'
+    - 'yarn.lock'
