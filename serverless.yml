@@ -17,7 +17,9 @@ custom:
         'pip',
         'setuptools'
     ]
+
   datadog:
+    forwarder: "${ssm:/shared/enip/datadog_forwarder_arn~true}"
     flushMetricsToLogs: true
 
   prune:
@@ -39,10 +41,10 @@ provider:
     env: ${self:custom.stage}
 
   environment:
-    # TODO:
-    # SENTRY_DSN: ${ssm:/${self:custom.stage}/enip/sentry_dsn}
-    # SENTRY_ENVIRONMENT: ${self:custom.stage}
-    DB_URL: "${ssm:/${self:custom.stage}/enip/db/url~true}"
+    SENTRY_DSN: ${ssm:/shared/enip/sentry_dsn~true}
+    SENTRY_ENVIRONMENT: ${self:custom.stage}
+    POSTGRES_URL: "${ssm:/${self:custom.stage}/enip/db/url~true}"
+
   memorySize: 1024
 
 plugins:
@@ -54,7 +56,7 @@ functions:
   hello:
     handler: enip_backend.lambda_handlers.hello
     events:
-      - schedule: "rate(5 minute)"
+      - schedule: "rate(5 minutes)"
     timeout: 60
 
 
