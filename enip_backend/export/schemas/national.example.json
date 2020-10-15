@@ -1,27 +1,39 @@
 {
-  "national_summary": {
+  "nationalSummary": {
     "P": {
       "dem": {
         "firstName": "Hillary",
         "lastName": "Clinton",
         "popVote": 65853516,
         "popPct": 0.49,
-        "statesWon": 21,
-        "electWon": 232
+        "electWon": 232,
+        "popVoteHistory": {
+          "2020-11-03T20:00:00Z": 34437487,
+          "2020-11-03T20:30:00Z": 44437487,
+          "2020-11-03T21:00:00Z": 54437487
+        }
       },
       "gop": {
         "firstName": "Hillary",
         "lastName": "Clinton",
         "popVote": 65853516,
         "popPct": 0.49,
-        "statesWon": 21,
-        "electWon": 232
+        "electWon": 232,
+        "popVoteHistory": {
+          "2020-11-03T20:00:00Z": 34437487,
+          "2020-11-03T20:30:00Z": 44437487,
+          "2020-11-03T21:00:00Z": 54437487
+        }
       },
       "oth": {
         "popVote": 65853516,
         "popPct": 0.49,
-        "statesWon": 21,
-        "electWon": 232
+        "electWon": 232,
+        "popVoteHistory": {
+          "2020-11-03T20:00:00Z": 34437487,
+          "2020-11-03T20:30:00Z": 44437487,
+          "2020-11-03T21:00:00Z": 54437487
+        }
       },
       "winner": "dem"
     },
@@ -48,7 +60,7 @@
       }
     }
   },
-  "state_summaries": {
+  "stateSummaries": {
     "MT": {
       "P": {
         "dem": {

@@ -1,11 +1,10 @@
 from .apapi import ingest_ap
 from .ingest_run import insert_ingest_run
-from ..enip_common.pg import conn
+from ..enip_common.pg import get_cursor
 
 
 def ingest_all():
-    cursor = conn.cursor()
-    try:
+    with get_cursor() as cursor:
         # Create a record for this ingest run
         ingest_id = insert_ingest_run(cursor)
         print(f"Ingest ID: {ingest_id}")
@@ -14,11 +13,8 @@ def ingest_all():
         ingest_ap(cursor, ingest_id)
 
         print("Comitting...")
-        conn.commit()
 
-        print(f"All done! Completed ingest {ingest_id}")
-    finally:
-        cursor.close()
+    print(f"All done! Completed ingest {ingest_id}")
 
 
 if __name__ == "__main__":

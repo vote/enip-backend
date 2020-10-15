@@ -17,5 +17,11 @@ The job of the backend is to:
 
 The ingester is responsible for importing all of our data sources into Postgres.
 
-You can then run the ingester with: `pipenv run python -m enip_backend.ingest`.
+You can run the ingester with: `pipenv run python -m enip_backend.ingest.run`.
 
+## Export
+
+The exporter is responsible for updates all the exports in S3 based on the
+latest data in Postgres.
+
+You can run the exporter with: `pipenv run python -m enip_backend.export.run`
