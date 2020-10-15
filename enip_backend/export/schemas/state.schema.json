@@ -4,13 +4,154 @@
   "title": "ENIP State Data Schema",
   "type": "object",
   "definitions": {
-
-  },
-  "properties": {
-    "foo": {
-      "type": "integer"
+    "county_candidate_named": {
+      "$id": "#county_candidate_named",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstName",
+        "lastName",
+        "popVote",
+        "popPct",
+        "popVoteHistory"
+      ],
+      "properties": {
+        "firstName": {"type": "string"},
+        "lastName": {"type": "string"},
+        "popVote": {"type": "integer"},
+        "popPct": {"type": "number"},
+        "popVoteHistory": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "county_candidate_unnamed": {
+      "$id": "#county_candidate_unnamed",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "popVote",
+        "popPct",
+        "popVoteHistory"
+      ],
+      "properties": {
+        "popVote": {"type": "integer"},
+        "popPct": {"type": "number"},
+        "popVoteHistory": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "county_congressional_result": {
+      "$id": "#county_congressional_result",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dem", "gop", "oth", "multipleDem", "multipleGop"],
+      "properties": {
+        "dem": {
+          "oneOf": [
+            {"type": "null" },
+            {"$ref": "#/definitions/county_candidate_named" }
+          ]
+        },
+        "gop": {
+          "oneOf": [
+            {"type": "null" },
+            {"$ref": "#/definitions/county_candidate_named" }
+          ]
+        },
+        "oth": {"$ref": "#/definitions/county_candidate_unnamed" },
+        "multipleDem": {"type": "boolean"},
+        "multipleGop": {"type": "boolean"}
+      }
+    },
+    "county_presidential_result": {
+      "$id": "#county_presidential_result",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dem", "gop", "oth"],
+      "properties": {
+        "dem": {
+          "oneOf": [
+            {"type": "null" },
+            {"$ref": "#/definitions/county_candidate_named" }
+          ]
+        },
+        "gop": {
+          "oneOf": [
+            {"type": "null" },
+            {"$ref": "#/definitions/county_candidate_named" }
+          ]
+        },
+        "oth": {"$ref": "#/definitions/county_candidate_unnamed" }
+      }
+    },
+    "county_senate_results": {
+      "$id": "#county_senate_results",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/county_congressional_result"
+      },
+      "propertyNames": {
+        "pattern": "^[A-Z]{2}(-S)?$"
+      }
+    },
+    "county_house_results": {
+      "$id": "#county_house_results",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/county_congressional_result"
+      },
+      "propertyNames": {
+        "pattern": "^(\\d\\d)|AL$"
+      }
+    },
+    "county": {
+      "$id": "#county",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["P", "H", "S"],
+      "properties": {
+        "P": {
+          "$ref": "#/definitions/county_presidential_result"
+        },
+        "S": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/definitions/county_senate_results"}
+          ]
+        },
+        "H": {
+          "$ref": "#/definitions/county_house_results"
+        }
+      }
     }
   },
-  "required": ["foo"],
+  "properties": {
+    "counties": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/county"
+      },
+      "propertyNames": {
+        "pattern": "^\\d{5}$"
+      }
+    }
+  },
+  "required": ["counties"],
   "additionalProperties": false
 }
