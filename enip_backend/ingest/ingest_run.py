@@ -55,8 +55,8 @@ def insert_ingest_run(cursor):
     waypoint_cols = ", ".join(col_name for col_name, delta in WAYPOINT_INTERVALS)
     waypoint_placeholders = ", ".join("%s" for col_name, delta in WAYPOINT_INTERVALS)
     cursor.execute(
-        f"INSERT INTO ingest_run (ingest_dt, {waypoint_cols}) VALUES (now(), {waypoint_placeholders}) RETURNING ingest_id",
+        f"INSERT INTO ingest_run (ingest_dt, {waypoint_cols}) VALUES (now(), {waypoint_placeholders}) RETURNING ingest_id, ingest_dt",
         waypoint_dts,
     )
-    return cursor.fetchone()[0]
+    return cursor.fetchone()[0], cursor.fetchone()[1]
 

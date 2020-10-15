@@ -5,6 +5,8 @@ import sys
 import json
 from datetime import datetime
 from jsonschema import validate
+import random
+import sentry_sdk
 
 from ..enip_common.states import STATES
 from ..enip_common.pg import get_cursor
@@ -12,7 +14,7 @@ from ..enip_common import s3
 from ..enip_common.config import CDN_URL
 
 from .national import NationalDataExporter
-from .schemas import national_schema
+from .schemas import national_schema, state_schema
 
 THREADS = 26
 
@@ -52,8 +54,13 @@ def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path):
 
 
 def export_state(ingest_run_id, ingest_run_dt, state_code):
-    time.sleep(1)
-    return False
+    return export_to_s3(
+        ingest_run_id,
+        ingest_run_dt,
+        json.dumps({"foo": random.randrange(1, 5)}),
+        state_schema,
+        f"states/{state_code}",
+    )
 
 
 def export_national(ingest_run_id, ingest_run_dt):
@@ -69,6 +76,7 @@ def export_national(ingest_run_id, ingest_run_dt):
 
 
 def export_all(ingest_run_id, ingest_run_dt):
+    print("Running all exports...")
     any_failed = False
     with ThreadPoolExecutor(max_workers=THREADS) as executor:
         ntl_future = executor.submit(export_national, ingest_run_id, ingest_run_dt)
@@ -82,14 +90,15 @@ def export_all(ingest_run_id, ingest_run_dt):
         def handle_result(export_name, future):
             try:
                 if future.result():
-                    print(f"Export {export_name} completed WITH new results")
+                    print(f"  Export {export_name} completed WITH new results")
                 else:
-                    print(f"Export {export_name} completed WITHOUT new results")
+                    print(f"  Export {export_name} completed WITHOUT new results")
 
             except Exception as e:
-                # TODO: capture sentry error
-                print(f"Export {export_name} failed")
+                print(f"  Export {export_name} failed")
                 traceback.print_exception(*sys.exc_info())
+
+                sentry_sdk.capture_exception(e)
                 any_failed = True
 
         handle_result("NATIONAL", ntl_future)

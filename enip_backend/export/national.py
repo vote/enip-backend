@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional, NamedTuple, Union, Literal, cast, Dict
+from typing import Any, Optional, NamedTuple, Union, cast, Dict
 
 from ..enip_common.pg import get_cursor
 from ..enip_common.states import DISTRICTS_BY_STATE, AT_LARGE_HOUSE_STATES
@@ -13,9 +13,9 @@ SQLRecord = NamedTuple(
         ("ingest_id", int),
         ("elex_id", str),
         ("statepostal", str),
-        ("level", Union[Literal["national"], Literal["state"], Literal["district"]]),
+        ("level", str),
         ("reportingunitname", Optional[str]),
-        ("officeid", Union[Literal["P"], Literal["S"], Literal["H"]]),
+        ("officeid", str),
         ("seatnum", Optional[int]),
         ("party", str),
         ("first", str),

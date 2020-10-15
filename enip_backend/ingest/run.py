@@ -6,7 +6,7 @@ from ..enip_common.pg import get_cursor
 def ingest_all():
     with get_cursor() as cursor:
         # Create a record for this ingest run
-        ingest_id = insert_ingest_run(cursor)
+        ingest_id, ingest_dt = insert_ingest_run(cursor)
         print(f"Ingest ID: {ingest_id}")
 
         # Fetch the AP results
@@ -14,7 +14,8 @@ def ingest_all():
 
         print("Comitting...")
 
-    print(f"All done! Completed ingest {ingest_id}")
+    print(f"All done! Completed ingest {ingest_id} at {ingest_dt}")
+    return ingest_id, ingest_dt
 
 
 if __name__ == "__main__":
