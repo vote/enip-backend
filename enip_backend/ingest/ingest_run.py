@@ -58,5 +58,6 @@ def insert_ingest_run(cursor):
         f"INSERT INTO ingest_run (ingest_dt, {waypoint_cols}) VALUES (now(), {waypoint_placeholders}) RETURNING ingest_id, ingest_dt",
         waypoint_dts,
     )
-    return cursor.fetchone()[0], cursor.fetchone()[1]
+    res = cursor.fetchone()
+    return res[0], res[1]
 
