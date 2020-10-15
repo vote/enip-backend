@@ -43,16 +43,25 @@
         "lastName",
         "popVote",
         "popPct",
-        "statesWon",
-        "electWon"
+        "electWon",
+        "popVoteHistory"
       ],
       "properties": {
         "firstName": {"type": "string"},
         "lastName": {"type": "string"},
         "popVote": {"type": "integer"},
         "popPct": {"type": "number"},
-        "statesWon": {"type": "integer"},
-        "electWon": {"type": "integer"}
+        "electWon": {"type": "integer"},
+        "popVoteHistory": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
       }
     },
     "national_summary_p_candidate_unnamed": {
@@ -62,14 +71,22 @@
       "required": [
         "popVote",
         "popPct",
-        "statesWon",
         "electWon"
       ],
       "properties": {
         "popVote": {"type": "integer"},
         "popPct": {"type": "number"},
-        "statesWon": {"type": "integer"},
-        "electWon": {"type": "integer"}
+        "electWon": {"type": "integer"},
+        "popVoteHistory": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
       }
     },
     "national_summary_p": {
@@ -196,10 +213,20 @@
       "$id": "#state_summary_congressional_result",
       "type": "object",
       "additionalProperties": false,
-      "required": ["oth", "multipleDem", "multipleGop", "comments"],
+      "required": ["dem", "gop", "oth", "multipleDem", "multipleGop", "comments"],
       "properties": {
-        "dem": {"$ref": "#/definitions/state_summary_candidate_named" },
-        "gop": {"$ref": "#/definitions/state_summary_candidate_named" },
+        "dem": {
+          "oneOf": [
+            {"type": "null" },
+            {"$ref": "#/definitions/state_summary_candidate_named" }
+          ]
+        },
+        "gop": {
+          "oneOf": [
+            {"type": "null" },
+            {"$ref": "#/definitions/state_summary_candidate_named" }
+          ]
+        },
         "oth": {"$ref": "#/definitions/state_summary_candidate_unnamed" },
         "multipleDem": {"type": "boolean"},
         "multipleGop": {"type": "boolean"},
@@ -217,7 +244,10 @@
           "$ref": "#/definitions/state_summary_p"
         },
         "S": {
-          "$ref": "#/definitions/state_summary_congressional_result"
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/definitions/state_summary_congressional_result"}
+          ]
         },
         "H": {
           "type": "object",
@@ -254,7 +284,7 @@
     }
   },
   "properties": {
-    "national_summary": {
+    "nationalSummary": {
       "type": "object",
       "description": "National summary",
       "additionalProperties": false,
@@ -271,7 +301,7 @@
         }
       }
     },
-    "state_summaries": {
+    "stateSummaries": {
       "type": "object",
       "description": "National summary",
       "additionalProperties": false,
@@ -395,6 +425,6 @@
       }
     }
   },
-  "required": ["national_summary", "state_summaries"],
+  "required": ["nationalSummary", "stateSummaries"],
   "additionalProperties": false
 }

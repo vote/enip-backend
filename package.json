@@ -11,7 +11,7 @@
     "serverless-python-requirements": "^5.1.0"
   },
   "scripts": {
-    "sls": "serverless"
+    "sls": "AWS_SDK_LOAD_CONFIG=1 serverless"
   },
   "repository": {
     "type": "git",

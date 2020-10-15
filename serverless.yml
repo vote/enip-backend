@@ -4,7 +4,7 @@ custom:
   stage: ${opt:stage, 'staging'}
   pythonRequirements:
     dockerizePip: true
-    slim: true
+    slim: false # jsonschema package fails with true: https://github.com/Julian/jsonschema/issues/628#issuecomment-564456058
     useDownloadCache: false
     noDeploy: [
         'boto3',
@@ -44,8 +44,22 @@ provider:
     SENTRY_DSN: ${ssm:/shared/enip/sentry_dsn~true}
     SENTRY_ENVIRONMENT: ${self:custom.stage}
     POSTGRES_URL: "${ssm:/${self:custom.stage}/enip/db/url~true}"
+    INGEST_TEST_DATA: "true"
+    ELECTION_DATE: "2020-11-03"
+    AP_API_KEY: ${ssm:/shared/enip/ap_api_key~true}
+    S3_BUCKET: voteamerica-enip-data
+    S3_PREFIX: ${self:custom.stage}
 
-  memorySize: 1024
+  memorySize: 3008
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:*'
+      Resource: 'arn:aws:s3:::voteamerica-enip-data'
+    - Effect: 'Allow'
+      Action:
+        - 's3:*'
+      Resource: 'arn:aws:s3:::voteamerica-enip-data/*'
 
 plugins:
   - serverless-python-requirements
@@ -53,10 +67,10 @@ plugins:
   - serverless-plugin-datadog
 
 functions:
-  hello:
-    handler: enip_backend.lambda_handlers.hello
+  run:
+    handler: enip_backend.lambda_handlers.run
     events:
-      - schedule: "rate(5 minutes)"
+      - schedule: "rate(1 minute)"
     timeout: 60
 
 

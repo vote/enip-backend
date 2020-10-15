@@ -21,7 +21,12 @@ def insert_ingest_run(cursor):
     now = datetime.now(tz=timezone.utc)
 
     # Find the most recent ingest
-    max_sql = ", ".join([f"MAX({col_name})" for col_name, delta in WAYPOINT_INTERVALS])
+    max_sql = ", ".join(
+        [
+            f"MAX({col_name}) AS waypoint{int(delta.total_seconds())}"
+            for col_name, delta in WAYPOINT_INTERVALS
+        ]
+    )
 
     cursor.execute(f"SELECT {max_sql} FROM ingest_run")
 
@@ -50,8 +55,9 @@ def insert_ingest_run(cursor):
     waypoint_cols = ", ".join(col_name for col_name, delta in WAYPOINT_INTERVALS)
     waypoint_placeholders = ", ".join("%s" for col_name, delta in WAYPOINT_INTERVALS)
     cursor.execute(
-        f"INSERT INTO ingest_run (ingest_dt, {waypoint_cols}) VALUES (now(), {waypoint_placeholders}) RETURNING ingest_id",
+        f"INSERT INTO ingest_run (ingest_dt, {waypoint_cols}) VALUES (now(), {waypoint_placeholders}) RETURNING ingest_id, ingest_dt",
         waypoint_dts,
     )
-    return cursor.fetchone()[0]
+    res = cursor.fetchone()
+    return res[0], res[1]
 
