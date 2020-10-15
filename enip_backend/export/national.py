@@ -147,7 +147,7 @@ class NationalDataExporter:
     def record_district_result(self, record: SQLRecord) -> None:
         """
         Records a "district"-level result. These results are presidential results
-        for congression district and at-large NE and ME districts.
+        for congressional district and at-large NE and ME districts.
         """
         assert record.officeid == "P"
 
