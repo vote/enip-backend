@@ -1,10 +1,7 @@
 from datetime import datetime
-from enum import Enum
-from typing import NamedTuple, Optional, Dict, Union, Any, Tuple, List, cast, Generator
+from typing import Any, Dict, Generator, List, NamedTuple, Optional, Union
 
 from ..enip_common.pg import get_cursor
-from ..enip_common.states import DISTRICTS_BY_STATE, AT_LARGE_HOUSE_STATES
-
 from . import structs
 
 SQLRecord = NamedTuple(

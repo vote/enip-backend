@@ -1,14 +1,11 @@
 from datetime import datetime
-from enum import Enum
-from typing import Any, Optional, NamedTuple, Union, cast, Dict, Tuple, List
+from typing import Any, List, Tuple
 
-from ..enip_common.pg import get_cursor
-from ..enip_common.states import DISTRICTS_BY_STATE, AT_LARGE_HOUSE_STATES
-
+from ..enip_common.states import AT_LARGE_HOUSE_STATES
 from . import structs
 from .helpers import (
-    SQLRecord,
     HistoricalResults,
+    SQLRecord,
     handle_candidate_results,
     load_election_results,
     load_historicals,

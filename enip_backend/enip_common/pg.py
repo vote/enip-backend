@@ -1,8 +1,7 @@
-import os
-import psycopg2.pool
-import psycopg2.extras
-
 from contextlib import contextmanager
+
+import psycopg2.extras
+import psycopg2.pool
 
 from ..enip_common.config import POSTGRES_URL
 

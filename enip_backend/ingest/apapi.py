@@ -1,10 +1,9 @@
-from elex.api.models import Election
-import os
-import io
 import csv
-from datetime import datetime, timedelta, timezone
+import io
 
-from ..enip_common.config import AP_API_KEY, INGEST_TEST_DATA, ELECTION_DATE
+from elex.api.models import Election
+
+from ..enip_common.config import AP_API_KEY, ELECTION_DATE, INGEST_TEST_DATA
 
 OFFICE_IDS = ["P", "S", "H"]
 

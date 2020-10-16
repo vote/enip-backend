@@ -1,21 +1,19 @@
-from concurrent.futures import ThreadPoolExecutor
-import traceback
-import time
-import sys
 import json
+import sys
+import traceback
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from jsonschema import validate
-import random
-import sentry_sdk
 
-from ..enip_common.states import STATES
-from ..enip_common.pg import get_cursor
+import sentry_sdk
+from jsonschema import validate
+
 from ..enip_common import s3
 from ..enip_common.config import CDN_URL
-
+from ..enip_common.pg import get_cursor
+from ..enip_common.states import STATES
 from .national import NationalDataExporter
-from .state import StateDataExporter
 from .schemas import national_schema, state_schema
+from .state import StateDataExporter
 
 THREADS = 26
 
@@ -43,7 +41,7 @@ def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path):
 
     # Write the new latest JSON
     if was_different:
-        last_updated = str(ingest_run_dt)
+        str(ingest_run_dt)
         new_latest_json = {
             "lastUpdated": str(ingest_run_dt),
             "path": name,
@@ -102,7 +100,6 @@ def export_all(ingest_run_id, ingest_run_dt):
                 traceback.print_exception(*sys.exc_info())
 
                 sentry_sdk.capture_exception(e)
-                any_failed = True
 
         handle_result("NATIONAL", ntl_future)
         for state_code, future in state_futures.items():

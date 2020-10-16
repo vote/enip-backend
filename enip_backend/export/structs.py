@@ -1,9 +1,9 @@
-from enum import Enum
-from pydantic import BaseModel, Field
 from datetime import datetime
-from humps import camelize
+from enum import Enum
+from typing import Dict, List, Optional, Union
 
-from typing import Dict, Optional, List, Union
+from humps import camelize
+from pydantic import BaseModel, Field
 
 
 def to_camel(string):

@@ -2,8 +2,8 @@ import sentry_sdk
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
 from .enip_common import config
-from .ingest.run import ingest_all
 from .export.run import export_all
+from .ingest.run import ingest_all
 
 if config.SENTRY_DSN:
     sentry_sdk.init(

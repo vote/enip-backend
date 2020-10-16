@@ -1,6 +1,6 @@
+from ..enip_common.pg import get_cursor
 from .apapi import ingest_ap
 from .ingest_run import insert_ingest_run
-from ..enip_common.pg import get_cursor
 
 
 def ingest_all():

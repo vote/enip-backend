@@ -1,8 +1,9 @@
 import json
-import boto3
 import os.path
-from botocore.exceptions import ClientError
+
+import boto3
 import botocore.config
+from botocore.exceptions import ClientError
 
 from .config import S3_BUCKET, S3_PREFIX
 
@@ -53,4 +54,3 @@ def write_noncacheable_json(path, content):
         acl="public-read",
         cache_control="no-store",
     )
-

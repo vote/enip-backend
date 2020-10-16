@@ -1,4 +1,4 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
 WAYPOINT_INTERVALS = [
     ("waypoint_30_dt", timedelta(minutes=30)),
@@ -60,4 +60,3 @@ def insert_ingest_run(cursor):
     )
     res = cursor.fetchone()
     return res[0], res[1]
-
