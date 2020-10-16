@@ -143,3 +143,30 @@ class NationalData(CamelModel):
         str, Union[StateSummary, PresidentialCDSummary, SenateSpecialSummary]
     ] = {}
 
+
+class CountyCongressionalResult(CamelModel):
+    dem: Optional[StateSummaryCandidateNamed] = None
+    gop: Optional[StateSummaryCandidateNamed] = None
+    oth: StateSummaryCandidateUnnamed = Field(
+        default_factory=StateSummaryCandidateUnnamed
+    )
+    multiple_dem: bool = False
+    multiple_gop: bool = False
+
+
+class CountyPresidentialResult(CamelModel):
+    dem: Optional[StateSummaryCandidateNamed] = None
+    gop: Optional[StateSummaryCandidateNamed] = None
+    oth: StateSummaryCandidateUnnamed = Field(
+        default_factory=StateSummaryCandidateUnnamed
+    )
+
+
+class County(CamelModel):
+    P: CountyPresidentialResult = Field(default_factory=CountyPresidentialResult)
+    S: Dict[str, CountyCongressionalResult] = {}
+    H: Dict[str, CountyCongressionalResult] = {}
+
+
+class StateData(CamelModel):
+    counties: Dict[str, County] = {}

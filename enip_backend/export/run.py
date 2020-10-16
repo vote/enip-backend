@@ -78,35 +78,11 @@ def export_national(ingest_run_id, ingest_run_dt):
 def export_all(ingest_run_id, ingest_run_dt):
     print("Running all exports...")
     any_failed = False
-    with ThreadPoolExecutor(max_workers=THREADS) as executor:
-        ntl_future = executor.submit(export_national, ingest_run_id, ingest_run_dt)
-        state_futures = {
-            state_code: executor.submit(
-                export_state, ingest_run_id, ingest_run_dt, state_code
-            )
-            for state_code in STATES
-        }
 
-        def handle_result(export_name, future):
-            try:
-                if future.result():
-                    print(f"  Export {export_name} completed WITH new results")
-                else:
-                    print(f"  Export {export_name} completed WITHOUT new results")
-
-            except Exception as e:
-                print(f"  Export {export_name} failed")
-                traceback.print_exception(*sys.exc_info())
-
-                sentry_sdk.capture_exception(e)
-                any_failed = True
-
-        handle_result("NATIONAL", ntl_future)
-        for state_code, future in state_futures.items():
-            handle_result(state_code, future)
-
-    if any_failed:
-        raise RuntimeError("Some exports failed")
+    if export_national(ingest_run_id, ingest_run_dt):
+        print(f"  National export completed WITH new results")
+    else:
+        print(f"  National export completed WITHOUT new results")
 
 
 if __name__ == "__main__":

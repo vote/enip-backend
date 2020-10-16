@@ -16,9 +16,9 @@ pool = psycopg2.pool.ThreadedConnectionPool(50, 250, POSTGRES_URL)
 
 @contextmanager
 def get_cursor():
+    conn = pool.getconn()
     try:
-        conn = pool.getconn()
-        with pool.getconn() as conn:
+        with conn:
             with conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor) as cursor:
                 yield cursor
     finally:

@@ -2,10 +2,13 @@ import json
 import boto3
 import os.path
 from botocore.exceptions import ClientError
+import botocore.config
 
 from .config import S3_BUCKET, S3_PREFIX
 
-s3 = boto3.client("s3")
+client_config = botocore.config.Config(max_pool_connections=50,)
+
+s3 = boto3.client("s3", config=client_config)
 
 
 def read_json(path):
