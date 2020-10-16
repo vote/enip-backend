@@ -43,7 +43,6 @@ class NationalDataExporter:
         """
         Helper function to add one to the senate/house national summary
         """
-        race = self.data.counties
         if party == structs.Party.DEM:
             data.dem.won += 1
         elif party == structs.Party.GOP:

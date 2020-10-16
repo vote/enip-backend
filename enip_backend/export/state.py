@@ -30,20 +30,14 @@ class StateDataExporter:
         """
         Records a "county"-level presidential result.
         """
-        state = record.statepostal
-
-        # Initialize the state summary
-        if state not in self.data.state_summaries:
-            self.data.state_summaries[state] = structs.StateSummary()
-
         # Initialize the county
         county = record.fipscode
-        if county not in self.data.state_summaries[state].counties:
-            self.data.state_summaries[state].counties[county] = structs.County()
+        if county not in self.data.counties:
+            self.data.counties[county] = structs.County()
 
         # Add the results from this record
         handle_candidate_results(
-            self.data.state_summaries[state].counties[county].P,
+            self.data.counties[county].P,
             structs.StateSummaryCandidateNamed,
             record,
             self.historical_counts,
@@ -58,25 +52,18 @@ class StateDataExporter:
             # Georgia senate special election
             state = "GA-S"
 
-        # Initialize the state summary
-        if state not in self.data.state_summaries:
-            self.data.state_summaries[state] = structs.StateSummary()
-
         # Initialize the county
         county = record.fipscode
-        if county not in self.data.state_summaries[state].counties:
-            self.data.state_summaries[state].counties[county] = structs.County()
+        if county not in self.data.counties:
+            self.data.counties[county] = structs.County()
 
-        # Initialize the sentate result
-        senate_result = self.data.state_summaries[state].counties[county].S
-        if not senate_result:
-            # No results for this senate race yet, initialize it
-            senate_result = structs.CountyCongressionalResult()
-            self.data.state_summaries[state].counties[county].S = senate_result
+        # Initialize the senate result
+        if state not in self.data.counties[county].S:
+            self.data.counties[county].S[state] = structs.CountyCongressionalResult()
 
         # Add the results from this record
         handle_candidate_results(
-            senate_result,
+            self.data.counties[county].S[state],
             structs.StateSummaryCandidateNamed,
             record,
             self.historical_counts,
@@ -91,23 +78,18 @@ class StateDataExporter:
         if state in AT_LARGE_HOUSE_STATES:
             seat = "AL"
 
-        # Initialize the state summary
-        if state not in self.data.state_summaries:
-            self.data.state_summaries[state] = structs.StateSummary()
-
         # Initialize the county
         county = record.fipscode
-        if county not in self.data.state_summaries[state].counties:
-            self.data.state_summaries[state].couznties[county] = structs.County()
+        if county not in self.data.counties:
+            self.data.counties[county] = structs.County()
 
-        # Initialize the house result
-        house_results = self.data.state_summaries[state].counties[county].H
-        if seat not in house_results:
-            house_results[seat] = structs.CountyCongressionalResult()
+        # Initialize the senate result
+        if seat not in self.data.counties[county].H:
+            self.data.counties[county].H[seat] = structs.CountyCongressionalResult()
 
         # Add the results from this record
         handle_candidate_results(
-            house_results[seat],
+            self.data.counties[county].H[seat],
             structs.StateSummaryCandidateNamed,
             record,
             self.historical_counts,

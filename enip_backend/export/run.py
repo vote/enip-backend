@@ -14,6 +14,7 @@ from ..enip_common import s3
 from ..enip_common.config import CDN_URL
 
 from .national import NationalDataExporter
+from .state import StateDataExporter
 from .schemas import national_schema, state_schema
 
 THREADS = 26
@@ -54,10 +55,12 @@ def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path):
 
 
 def export_state(ingest_run_id, ingest_run_dt, state_code):
+    data = StateDataExporter(ingest_run_id, ingest_run_dt, state_code).run_export()
+
     return export_to_s3(
         ingest_run_id,
         ingest_run_dt,
-        json.dumps({"foo": random.randrange(1, 5)}),
+        data.json(by_alias=True),
         state_schema,
         f"states/{state_code}",
     )
@@ -78,11 +81,35 @@ def export_national(ingest_run_id, ingest_run_dt):
 def export_all(ingest_run_id, ingest_run_dt):
     print("Running all exports...")
     any_failed = False
+    with ThreadPoolExecutor(max_workers=THREADS) as executor:
+        ntl_future = executor.submit(export_national, ingest_run_id, ingest_run_dt)
+        state_futures = {
+            state_code: executor.submit(
+                export_state, ingest_run_id, ingest_run_dt, state_code
+            )
+            for state_code in STATES
+        }
 
-    if export_national(ingest_run_id, ingest_run_dt):
-        print(f"  National export completed WITH new results")
-    else:
-        print(f"  National export completed WITHOUT new results")
+        def handle_result(export_name, future):
+            try:
+                if future.result():
+                    print(f"  Export {export_name} completed WITH new results")
+                else:
+                    print(f"  Export {export_name} completed WITHOUT new results")
+
+            except Exception as e:
+                print(f"  Export {export_name} failed")
+                traceback.print_exception(*sys.exc_info())
+
+                sentry_sdk.capture_exception(e)
+                any_failed = True
+
+        handle_result("NATIONAL", ntl_future)
+        for state_code, future in state_futures.items():
+            handle_result(state_code, future)
+
+    if any_failed:
+        raise RuntimeError("Some exports failed")
 
 
 if __name__ == "__main__":

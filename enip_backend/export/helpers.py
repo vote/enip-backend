@@ -143,7 +143,7 @@ def load_election_results(
     with get_cursor() as cursor:
         # Iterate over every result
         cursor.execute(
-            """
+            f"""
             SELECT
                 ingest_id,
 

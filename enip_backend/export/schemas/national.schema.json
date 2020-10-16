@@ -238,7 +238,7 @@
       "$id": "#state_summary",
       "type": "object",
       "additionalProperties": false,
-      "required": ["P", "H", "S", "counties"],
+      "required": ["P", "H", "S"],
       "properties": {
         "P": {
           "$ref": "#/definitions/state_summary_p"
@@ -256,15 +256,6 @@
           },
           "propertyNames": {
             "pattern": "^(\\d\\d)|(AL)$"
-          }
-        },
-        "counties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/county"
-          },
-          "propertyNames": {
-            "pattern": "^\\d{5}$"
           }
         }
       }
@@ -284,93 +275,10 @@
       "$id": "#senate_special_summary",
       "type": "object",
       "additionalProperties": false,
-      "required": ["S", "counties"],
+      "required": ["S"],
       "properties": {
         "S": {
           "$ref": "#/definitions/state_summary_congressional_result"
-        },
-        "counties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/county"
-          },
-          "propertyNames": {
-            "pattern": "^\\d{5}$"
-          }
-        }
-      }
-    },
-    "county_congressional_result": {
-      "$id": "#county_congressional_result",
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["dem", "gop", "oth", "multipleDem", "multipleGop"],
-      "properties": {
-        "dem": {
-          "oneOf": [
-            {"type": "null" },
-            {"$ref": "#/definitions/state_summary_candidate_named" }
-          ]
-        },
-        "gop": {
-          "oneOf": [
-            {"type": "null" },
-            {"$ref": "#/definitions/state_summary_candidate_named" }
-          ]
-        },
-        "oth": {"$ref": "#/definitions/state_summary_candidate_unnamed" },
-        "multipleDem": {"type": "boolean"},
-        "multipleGop": {"type": "boolean"}
-      }
-    },
-    "county_presidential_result": {
-      "$id": "#county_presidential_result",
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["dem", "gop", "oth"],
-      "properties": {
-        "dem": {
-          "oneOf": [
-            {"type": "null" },
-            {"$ref": "#/definitions/state_summary_candidate_named" }
-          ]
-        },
-        "gop": {
-          "oneOf": [
-            {"type": "null" },
-            {"$ref": "#/definitions/state_summary_candidate_named" }
-          ]
-        },
-        "oth": {"$ref": "#/definitions/state_summary_candidate_unnamed" }
-      }
-    },
-    "county_house_results": {
-      "$id": "#county_house_results",
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "#/definitions/county_congressional_result"
-      },
-      "propertyNames": {
-        "pattern": "^(\\d\\d)|AL$"
-      }
-    },
-    "county": {
-      "$id": "#county",
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["P", "H", "S"],
-      "properties": {
-        "P": {
-          "$ref": "#/definitions/county_presidential_result"
-        },
-        "S": {
-          "oneOf": [
-            {"type": "null"},
-            {"$ref": "#/definitions/county_congressional_result"}
-          ]
-        },
-        "H": {
-          "$ref": "#/definitions/county_house_results"
         }
       }
     }
