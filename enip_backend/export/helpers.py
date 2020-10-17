@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Any, Dict, Generator, List, NamedTuple, Optional, Union
 
-from ..enip_common.pg import get_cursor
 from ..enip_common.config import HISTORICAL_START
+from ..enip_common.pg import get_cursor
 from . import structs
 
 SQLRecord = NamedTuple(

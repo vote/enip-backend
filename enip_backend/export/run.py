@@ -10,7 +10,6 @@ from jsonschema import validate
 from ..enip_common import s3
 from ..enip_common.config import CDN_URL
 from ..enip_common.pg import get_cursor
-from ..enip_common.states import STATES
 from .national import NationalDataExporter
 from .schemas import national_schema, state_schema
 from .state import StateDataExporter

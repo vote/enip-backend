@@ -1,5 +1,6 @@
-from environs import Env
 from datetime import datetime, timezone
+
+from environs import Env
 
 env = Env()
 env.read_env()
