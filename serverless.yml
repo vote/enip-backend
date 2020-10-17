@@ -72,6 +72,7 @@ functions:
     events:
       - schedule: "rate(1 minute)"
     timeout: 60
+    maximumRetryAttempts: 0
 
 
 package:

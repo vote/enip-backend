@@ -235,6 +235,7 @@ class NationalDataExporter:
 
         sql_filter = "level IN ('national', 'state', 'district')"
         filter_params: List[Any] = []
+
         self.historical_counts = load_historicals(
             self.ingest_run_dt, sql_filter, filter_params
         )

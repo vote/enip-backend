@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, Generator, List, NamedTuple, Optional, Union
 
 from ..enip_common.pg import get_cursor
+from ..enip_common.config import HISTORICAL_START
 from . import structs
 
 SQLRecord = NamedTuple(
@@ -119,10 +120,11 @@ def load_historicals(
             WHERE ingest_run.waypoint_30_dt IS NOT NULL
                 AND racetypeid = 'G'
                 AND ingest_dt < %s
+                AND ingest_dt > %s
                 AND {filter_sql}
             ORDER BY elex_id, votecount, waypoint_30_dt ASC
             """,
-            [ingest_run_dt] + filter_params,
+            [ingest_run_dt, HISTORICAL_START] + filter_params,
         )
         for record in cursor:
             if record.elex_id not in historical_counts:

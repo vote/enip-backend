@@ -15,4 +15,4 @@ if config.SENTRY_DSN:
 
 def run(event, context):
     ingest_id, ingest_dt = ingest_all()
-    export_all(ingest_id, ingest_dt)
+    export_all(ingest_id, ingest_dt, ingest_dt.strftime("%Y%m%d%H%M%S"))

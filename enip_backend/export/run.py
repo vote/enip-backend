@@ -18,13 +18,13 @@ from .state import StateDataExporter
 THREADS = 26
 
 
-def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path):
+def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path, export_name):
     # Validate
     json_data_parsed = json.loads(json_data)
     validate(instance=json_data_parsed, schema=schema)
 
     # Write the JSON to s3
-    name = f"{path}/{datetime.now().strftime('%Y%m%d%H%M%S')}_{ingest_run_id}.json"
+    name = f"{path}/{export_name}_{ingest_run_id}.json"
     s3.write_cacheable_json(name, json_data)
 
     # Load the current latest JSON
@@ -40,19 +40,20 @@ def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path):
     was_different = previous_json != json_data_parsed
 
     # Write the new latest JSON
+    cdn_url = f"{CDN_URL}{name}"
     if was_different:
         str(ingest_run_dt)
         new_latest_json = {
             "lastUpdated": str(ingest_run_dt),
             "path": name,
-            "cdnUrl": f"{CDN_URL}{name}",
+            "cdnUrl": cdn_url,
         }
         s3.write_noncacheable_json(latest_name, json.dumps(new_latest_json))
 
-    return was_different
+    return was_different, cdn_url
 
 
-def export_state(ingest_run_id, ingest_run_dt, state_code):
+def export_state(ingest_run_id, ingest_run_dt, state_code, export_name):
     data = StateDataExporter(ingest_run_id, ingest_run_dt, state_code).run_export()
 
     return export_to_s3(
@@ -61,10 +62,11 @@ def export_state(ingest_run_id, ingest_run_dt, state_code):
         data.json(by_alias=True),
         state_schema,
         f"states/{state_code}",
+        export_name,
     )
 
 
-def export_national(ingest_run_id, ingest_run_dt):
+def export_national(ingest_run_id, ingest_run_dt, export_name):
     data = NationalDataExporter(ingest_run_id, ingest_run_dt).run_export()
 
     return export_to_s3(
@@ -73,27 +75,38 @@ def export_national(ingest_run_id, ingest_run_dt):
         data.json(by_alias=True),
         national_schema,
         "national",
+        export_name,
     )
 
 
-def export_all(ingest_run_id, ingest_run_dt):
+def export_all(ingest_run_id, ingest_run_dt, export_name):
     print("Running all exports...")
     any_failed = False
+    results = {}
     with ThreadPoolExecutor(max_workers=THREADS) as executor:
-        ntl_future = executor.submit(export_national, ingest_run_id, ingest_run_dt)
-        state_futures = {
-            state_code: executor.submit(
-                export_state, ingest_run_id, ingest_run_dt, state_code
-            )
-            for state_code in STATES
-        }
+        ntl_future = executor.submit(
+            export_national, ingest_run_id, ingest_run_dt, export_name
+        )
+        # state_futures = {
+        #     state_code: executor.submit(
+        #         export_state, ingest_run_id, ingest_run_dt, state_code, export_name
+        #     )
+        #     for state_code in STATES
+        # }
 
         def handle_result(export_name, future):
             try:
+                was_different, cdn_url = future.result()
                 if future.result():
-                    print(f"  Export {export_name} completed WITH new results")
+                    print(
+                        f"  Export {export_name} completed WITH new results: {cdn_url}"
+                    )
                 else:
-                    print(f"  Export {export_name} completed WITHOUT new results")
+                    print(
+                        f"  Export {export_name} completed WITHOUT new results: {cdn_url}"
+                    )
+
+                return cdn_url
 
             except Exception as e:
                 print(f"  Export {export_name} failed")
@@ -101,12 +114,16 @@ def export_all(ingest_run_id, ingest_run_dt):
 
                 sentry_sdk.capture_exception(e)
 
-        handle_result("NATIONAL", ntl_future)
-        for state_code, future in state_futures.items():
-            handle_result(state_code, future)
+        results["national"] = handle_result("NATIONAL", ntl_future)
+
+        results["states"] = {}
+        # for state_code, future in state_futures.items():
+        #     results["states"][state_code] = handle_result(state_code, future)
 
     if any_failed:
         raise RuntimeError("Some exports failed")
+
+    return results
 
 
 if __name__ == "__main__":
@@ -121,4 +138,4 @@ if __name__ == "__main__":
         ingest_dt = res.ingest_dt
 
     print(f"Exporting ingestion {ingest_id} from {ingest_dt}")
-    export_all(ingest_id, ingest_dt)
+    export_all(ingest_id, ingest_dt, datetime.now().strftime("%Y%m%d%H%M%S"))
