@@ -53,7 +53,8 @@ provider:
     AP_API_KEY: ${ssm:/shared/enip/ap_api_key~true}
     S3_BUCKET: voteamerica-enip-data
     S3_PREFIX: ${self:custom.stage}
-
+    GSHEET_API_CREDENTIALS_SSM_PATH: /shared/enip/gsheets_service_account
+    CALLS_GSHEET_ID: ${ssm:/shared/enip/calls_gsheet_id~true}
   memorySize: 3008
   iamRoleStatements:
     - Effect: 'Allow'

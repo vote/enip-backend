@@ -136,3 +136,6 @@ dmypy.json
 # serverless
 .serverless/
 node_modules/
+
+# intellij
+.idea/

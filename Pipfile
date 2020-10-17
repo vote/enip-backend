@@ -20,6 +20,8 @@ pyhumps = "*"
 boto3 = "*"
 jsonschema = "*"
 ddtrace = "*"
+pygsheets = "*"
+pytz = "*"
 
 [requires]
 python_version = "3.7"
