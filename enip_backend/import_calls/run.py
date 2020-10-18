@@ -1,12 +1,13 @@
+import json
 from datetime import datetime
 
 import boto3
 import psycopg2
 import pygsheets
-from pygsheets.authorization.service_account import Credentials
+from pygsheets.authorization import service_account
 from pytz import timezone
 
-from ..enip_common.config import POSTGRES_URL, GSHEET_API_CREDENTIALS_SSM_PATH
+from ..enip_common.config import POSTGRES_URL, GSHEET_API_CREDENTIALS_SSM_PATH, CALLS_GSHEET_ID
 
 DATA_RANGE = ("A", "D")
 PUBLISH_DEFAULT_RANGE = ("F1", "G1")
@@ -15,9 +16,16 @@ CALLED_AT_TZ = "US/Eastern"
 CALLED_AT_FMT = "%m/%d/%Y %H:%M:%S"
 
 
-def _get_gsheet_api_credentials():
-    ssm_param = boto3.client("ssm").get_parameter(Name=GSHEET_API_CREDENTIALS_SSM_PATH, WithDecryption=True)
-    return ssm_param.get("Parameter", {}).get("Value")
+def _get_gsheets_client():
+    ssm_param = boto3.client("ssm").get_parameter(
+        Name=GSHEET_API_CREDENTIALS_SSM_PATH, WithDecryption=True
+    )
+    param_value = ssm_param.get("Parameter", {}).get("Value")
+    credentials = service_account.Credentials.from_service_account_info(
+        json.loads(param_value),
+        scopes=("https://www.googleapis.com/auth/spreadsheets",)
+    )
+    return pygsheets.authorize(custom_credentials=credentials)
 
 
 def _convert_sheet_rows_to_dicts(vals):
@@ -67,9 +75,8 @@ def _write_rows_to_db(cursor, table, processed_rows):
 
 
 def import_calls_gsheet():
-    credentials = Credentials.from_service_account_info(_get_gsheet_api_credentials())
-    client = pygsheets.authorize(custom_credentials=credentials)
-    sheet = client.open_by_key()
+    client = _get_gsheets_client()
+    sheet = client.open_by_key(CALLS_GSHEET_ID)
     senate_data = _process_worksheet(sheet, "Senate Calls")
     president_data = _process_worksheet(sheet, "President Calls")
     with psycopg2.connect(POSTGRES_URL) as conn, conn.cursor() as cur:
