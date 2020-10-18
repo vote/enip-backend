@@ -8,7 +8,7 @@ from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 from .enip_common import config
 from .export.run import export_all_states, export_national
 from .ingest.apapi import ingest_ap
-from .import_calls.run import import_calls_gsheet
+from .calls_gsheet_sync.run import import_calls_gsheet
 from .ingest.run import ingest_all
 
 logging.getLogger().setLevel(logging.INFO)
