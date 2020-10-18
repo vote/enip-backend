@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List
+from typing import Any, List, Iterable
 
 from ..enip_common.states import AT_LARGE_HOUSE_STATES, DISTRICTS_BY_STATE
 from . import structs
@@ -230,7 +230,9 @@ class NationalDataExporter:
             # Give the party a win in the national summary
             self.grant_congressional_seat(self.data.national_summary.H, party)
 
-    def run_export(self) -> structs.NationalData:
+    def run_export(
+        self, preloaded_results: Iterable[SQLRecord]
+    ) -> structs.NationalData:
         self.data = structs.NationalData()
 
         sql_filter = "level IN ('national', 'state', 'district')"
@@ -239,9 +241,8 @@ class NationalDataExporter:
         self.historical_counts = load_historicals(
             self.ingest_run_dt, sql_filter, filter_params
         )
-        for record in load_election_results(
-            self.ingest_run_id, sql_filter, filter_params
-        ):
+
+        def handle_record(record):
             if record.level == "national":
                 self.record_ntl_result(record)
             elif record.level == "district":
@@ -256,6 +257,15 @@ class NationalDataExporter:
                 raise RuntimeError(
                     f"Uncategorizable result: {record.elex_id} {record.level} {record.officeid}"
                 )
+
+        if preloaded_results:
+            for record in preloaded_results:
+                handle_record(record)
+        else:
+            for record in load_election_results(
+                self.ingest_run_id, sql_filter, filter_params
+            ):
+                handle_record(record)
 
         # Call the presidential winner
         pres_summary = self.data.national_summary.P

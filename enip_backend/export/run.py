@@ -9,12 +9,13 @@ from jsonschema import validate
 
 from ..enip_common import s3
 from ..enip_common.config import CDN_URL
-from ..enip_common.pg import get_cursor
+from ..enip_common.pg import get_ro_cursor
+from ..enip_common.states import STATES
 from .national import NationalDataExporter
 from .schemas import national_schema, state_schema
 from .state import StateDataExporter
 
-THREADS = 26
+THREADS = 2
 
 
 def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path, export_name):
@@ -65,10 +66,11 @@ def export_state(ingest_run_id, ingest_run_dt, state_code, export_name):
     )
 
 
-def export_national(ingest_run_id, ingest_run_dt, export_name):
-    data = NationalDataExporter(ingest_run_id, ingest_run_dt).run_export()
+def export_national(ingest_run_id, ingest_run_dt, export_name, ingest_data=None):
+    print("Running national export...")
+    data = NationalDataExporter(ingest_run_id, ingest_run_dt).run_export(ingest_data)
 
-    return export_to_s3(
+    was_different, cdn_url = export_to_s3(
         ingest_run_id,
         ingest_run_dt,
         data.json(by_alias=True),
@@ -77,35 +79,40 @@ def export_national(ingest_run_id, ingest_run_dt, export_name):
         export_name,
     )
 
+    if was_different:
+        print(f"  National export completed WITH new results: {cdn_url}")
+    else:
+        print(f"  National export completed WITHOUT new results: {cdn_url}")
 
-def export_all(ingest_run_id, ingest_run_dt, export_name):
-    print("Running all exports...")
+    return cdn_url
+
+
+def export_all_states(ingest_run_id, ingest_run_dt, export_name):
+    print(f"Running all state exports from ingest {ingest_run_id}...")
     any_failed = False
     results = {}
-    with ThreadPoolExecutor(max_workers=THREADS) as executor:
-        ntl_future = executor.submit(
-            export_national, ingest_run_id, ingest_run_dt, export_name
-        )
-        # state_futures = {
-        #     state_code: executor.submit(
-        #         export_state, ingest_run_id, ingest_run_dt, state_code, export_name
-        #     )
-        #     for state_code in STATES
-        # }
 
-        def handle_result(export_name, future):
+    with ThreadPoolExecutor(max_workers=THREADS) as executor:
+        state_futures = {
+            state_code: executor.submit(
+                export_state, ingest_run_id, ingest_run_dt, state_code, export_name
+            )
+            for state_code in STATES
+        }
+
+        for state_code, future in state_futures.items():
             try:
                 was_different, cdn_url = future.result()
                 if future.result():
                     print(
-                        f"  Export {export_name} completed WITH new results: {cdn_url}"
+                        f"  Export {state_code} completed WITH new results: {cdn_url}"
                     )
                 else:
                     print(
-                        f"  Export {export_name} completed WITHOUT new results: {cdn_url}"
+                        f"  Export {state_code} completed WITHOUT new results: {cdn_url}"
                     )
 
-                return cdn_url
+                results[state_code] = cdn_url
 
             except Exception as e:
                 print(f"  Export {export_name} failed")
@@ -113,28 +120,26 @@ def export_all(ingest_run_id, ingest_run_dt, export_name):
 
                 sentry_sdk.capture_exception(e)
 
-        results["national"] = handle_result("NATIONAL", ntl_future)
-
-        results["states"] = {}
-        # for state_code, future in state_futures.items():
-        #     results["states"][state_code] = handle_result(state_code, future)
-
     if any_failed:
         raise RuntimeError("Some exports failed")
 
     return results
 
 
-if __name__ == "__main__":
+def get_latest_ingest():
     # Get the most recent ingest_run
-    with get_cursor() as cursor:
+    with get_ro_cursor() as cursor:
         cursor.execute(
             "SELECT ingest_id, ingest_dt FROM ingest_run ORDER BY ingest_dt DESC LIMIT 1"
         )
         res = cursor.fetchone()
 
-        ingest_id = res.ingest_id
-        ingest_dt = res.ingest_dt
+        return res.ingest_id, res.ingest_dt
+
+
+if __name__ == "__main__":
+    ingest_id, ingest_dt = get_latest_ingest()
 
     print(f"Exporting ingestion {ingest_id} from {ingest_dt}")
-    export_all(ingest_id, ingest_dt, datetime.now().strftime("%Y%m%d%H%M%S"))
+    export_national(ingest_id, ingest_dt, datetime.now().strftime("%Y%m%d%H%M%S"))
+    export_all_states(ingest_id, ingest_dt, datetime.now().strftime("%Y%m%d%H%M%S"))

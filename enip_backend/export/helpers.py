@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, Generator, List, NamedTuple, Optional, Union
 
 from ..enip_common.config import HISTORICAL_START
-from ..enip_common.pg import get_cursor
+from ..enip_common.pg import get_cursor, get_ro_cursor
 from . import structs
 
 SQLRecord = NamedTuple(
@@ -25,6 +25,29 @@ SQLRecord = NamedTuple(
         ("winner", bool),
     ],
 )
+
+
+def sqlrecord_from_dict(dict: Dict[str, Any]) -> SQLRecord:
+    return SQLRecord(
+        ingest_id=int(dict["ingest_id"]),
+        elex_id=str(dict["elex_id"]),
+        statepostal=str(dict["statepostal"]),
+        fipscode=str(dict["fipscode"]),
+        level=str(dict["level"]),
+        reportingunitname=str(dict["reportingunitname"])
+        if dict["reportingunitname"] is not None
+        else None,
+        officeid=str(dict["officeid"]),
+        seatnum=int(dict["seatnum"]) if dict["seatnum"] is not None else None,
+        party=str(dict["party"]),
+        first=str(dict["first"]),
+        last=str(dict["last"]),
+        electtotal=int(dict["electtotal"]),
+        votecount=int(dict["votecount"]),
+        votepct=float(dict["votepct"]),
+        winner=bool(dict["winner"]),
+    )
+
 
 # map of (elex id -> { waypoint_dt -> count})
 HistoricalResults = Dict[str, Dict[str, int]]
@@ -102,7 +125,7 @@ def load_historicals(
 ) -> HistoricalResults:
     historical_counts: HistoricalResults = {}
 
-    with get_cursor() as cursor:
+    with get_ro_cursor() as cursor:
         # Fetch historical results and produce a map of (elex id -> { waypoint_dt -> count})
         cursor.execute(
             f"""
@@ -139,6 +162,7 @@ def load_historicals(
 def load_election_results(
     ingest_run_id: str, filter_sql: str, filter_params: List[Any]
 ) -> Generator[SQLRecord, None, None]:
+    # Use the RW cursor to make sure we have the latest data
     with get_cursor() as cursor:
         # Iterate over every result
         cursor.execute(

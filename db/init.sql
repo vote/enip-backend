@@ -111,3 +111,18 @@ CREATE INDEX IF NOT EXISTS ap_result_lastupdated_idx
 
 CREATE INDEX IF NOT EXISTS ap_result_ingest_id_idx
   ON ap_result (ingest_id);
+
+
+-- Drop 5/10 min waypoint and just use a 15-minute one
+
+ALTER TABLE ingest_run
+DROP COLUMN IF EXISTS waypoint_10_dt;
+
+ALTER TABLE ingest_run
+DROP COLUMN IF EXISTS waypoint_5_dt;
+
+ALTER TABLE ingest_run
+ADD COLUMN IF NOT EXISTS waypoint_15_dt TIMESTAMPTZ UNIQUE;
+
+CREATE INDEX IF NOT EXISTS ingest_run_waypoint_15_dt_idx
+  ON ingest_run (waypoint_15_dt);

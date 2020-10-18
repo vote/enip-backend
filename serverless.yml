@@ -44,6 +44,7 @@ provider:
     SENTRY_DSN: ${ssm:/shared/enip/sentry_dsn~true}
     SENTRY_ENVIRONMENT: ${self:custom.stage}
     POSTGRES_URL: "${ssm:/${self:custom.stage}/enip/db/url~true}"
+    POSTGRES_RO_URL: "${ssm:/${self:custom.stage}/enip/db/url_ro~true}"
     INGEST_TEST_DATA: "true"
     ELECTION_DATE: "2020-11-03"
     AP_API_KEY: ${ssm:/shared/enip/ap_api_key~true}
@@ -73,6 +74,14 @@ functions:
       - schedule: "rate(1 minute)"
     timeout: 60
     maximumRetryAttempts: 0
+
+  run_states:
+    handler: enip_backend.lambda_handlers.run_states
+    events:
+      - schedule: "rate(5 minutes)"
+    timeout: 300
+    maximumRetryAttempts: 0
+
 
 
 package:
