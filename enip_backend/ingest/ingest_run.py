@@ -1,9 +1,8 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
 WAYPOINT_INTERVALS = [
     ("waypoint_30_dt", timedelta(minutes=30)),
-    ("waypoint_5_dt", timedelta(minutes=5)),
-    ("waypoint_10_dt", timedelta(minutes=10)),
+    ("waypoint_15_dt", timedelta(minutes=15)),
     ("waypoint_60_dt", timedelta(minutes=60)),
 ]
 
@@ -18,6 +17,12 @@ def get_waypoint_for_dt(dt, interval):
 
 
 def insert_ingest_run(cursor):
+    """
+    Inserts a new record into ingest_run.
+    Returns (ingest_id, ingest_dt, waypoints)
+    Where waypoints is a list of waypoint columns (e.g. waypoint_15_dt) if this
+    ingest corresponds to one or more waypoints
+    """
     now = datetime.now(tz=timezone.utc)
 
     # Find the most recent ingest
@@ -31,6 +36,7 @@ def insert_ingest_run(cursor):
     cursor.execute(f"SELECT {max_sql} FROM ingest_run")
 
     waypoint_dts = []
+    waypoint_names = []
     for (last_waypoint, (col_name, interval)) in zip(
         cursor.fetchone(), WAYPOINT_INTERVALS
     ):
@@ -45,6 +51,7 @@ def insert_ingest_run(cursor):
         if not last_waypoint or (current_waypoint > last_waypoint):
             print(f"    -> This ingest run will be a new waypoint for {col_name}")
             waypoint_dt = current_waypoint
+            waypoint_names.append(col_name)
         else:
             print(f"    -> This ingest run is not a new waypoint for {col_name}")
             waypoint_dt = None
@@ -59,5 +66,4 @@ def insert_ingest_run(cursor):
         waypoint_dts,
     )
     res = cursor.fetchone()
-    return res[0], res[1]
-
+    return res[0], res[1], waypoint_names

@@ -5,6 +5,10 @@ verify_ssl = true
 
 [dev-packages]
 ipython = "*"
+mypy = "*"
+black = "*"
+autoflake = "*"
+isort = "*"
 
 [packages]
 elex = "*"
@@ -18,3 +22,13 @@ jsonschema = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+autoflake = "autoflake --remove-unused-variables --remove-all-unused-imports --ignore-init-module-imports -i --recursive enip_backend"
+isort = "isort --recursive enip_backend"
+black = "black enip_backend"
+mypy = "mypy enip_backend --strict-optional"
+format = "bash -c 'pipenv run autoflake && pipenv run isort && pipenv run black'"
+
+[pipenv]
+allow_prereleases = true

@@ -1,0 +1,173 @@
+{
+  "counties": {
+    "10003": {
+      "P": {
+        "dem": {
+          "firstName": "Joe",
+          "lastName": "Biden",
+          "popVote": 65853516,
+          "popPct": 0.49,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "gop": {
+          "firstName": "Donald",
+          "lastName": "Trump",
+          "popVote": 65853516,
+          "popPct": 0.49,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        },
+        "oth": {
+          "popVote": 65853516,
+          "popPct": 0.49,
+          "popVoteHistory": {
+            "2020-11-03T20:00:00Z": 34437487,
+            "2020-11-03T20:30:00Z": 44437487,
+            "2020-11-03T21:00:00Z": 54437487
+          }
+        }
+      },
+      "S": {
+        "GA": {
+          "dem": {
+            "firstName": "Jon",
+            "lastName": "Ossof",
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "gop": {
+            "firstName": "David",
+            "lastName": "Perdue",
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "oth": {
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "multipleDem": false,
+          "multipleGop": false
+        },
+        "GA-S": {
+          "dem": {
+            "firstName": "Raphael",
+            "lastName": "Warnock",
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "gop": {
+            "firstName": "Kelly",
+            "lastName": "Loeffler",
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "oth": {
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "multipleDem": true,
+          "multipleGop": true
+        }
+      },
+      "H": {
+        "01": {
+          "dem": {
+            "firstName": "Raphael",
+            "lastName": "Warnock",
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "gop": {
+            "firstName": "Kelly",
+            "lastName": "Loeffler",
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "oth": {
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "multipleDem": false,
+          "multipleGop": false
+        },
+        "14": {
+          "dem": null,
+          "gop": {
+            "firstName": "Marjorie",
+            "lastName": "Green",
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "oth": {
+            "popVote": 65853516,
+            "popPct": 0.49,
+            "popVoteHistory": {
+              "2020-11-03T20:00:00Z": 34437487,
+              "2020-11-03T20:30:00Z": 44437487,
+              "2020-11-03T21:00:00Z": 54437487
+            }
+          },
+          "multipleDem": false,
+          "multipleGop": false
+        }
+      }
+    }
+  }
+}

@@ -1,11 +1,15 @@
 import json
-import boto3
 import os.path
+
+import boto3
+import botocore.config
 from botocore.exceptions import ClientError
 
 from .config import S3_BUCKET, S3_PREFIX
 
-s3 = boto3.client("s3")
+client_config = botocore.config.Config(max_pool_connections=50,)
+
+s3 = boto3.client("s3", config=client_config)
 
 
 def read_json(path):
@@ -50,4 +54,3 @@ def write_noncacheable_json(path, content):
         acl="public-read",
         cache_control="no-store",
     )
-
