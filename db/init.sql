@@ -129,12 +129,12 @@ CREATE TABLE IF NOT EXISTS senate_calls (
   state TEXT PRIMARY KEY,
   ap_call TEXT,
   ap_called_at TIMESTAMPTZ,
-  published BOOLEAN NOT NULL
+  published BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS president_calls (
   state TEXT PRIMARY KEY,
   ap_call TEXT,
   ap_called_at TIMESTAMPTZ,
-  published BOOLEAN NOT NULL
+  published BOOLEAN NOT NULL DEFAULT FALSE
 );
