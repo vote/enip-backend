@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List, Tuple
+from typing import Any, Iterable, List
 
 from ..enip_common.states import AT_LARGE_HOUSE_STATES
 from . import structs
@@ -15,8 +15,7 @@ from .helpers import (
 class StateDataExporter:
     data: structs.StateData
 
-    def __init__(self, ingest_run_id: str, ingest_run_dt: datetime, statecode: str):
-        self.ingest_run_id = ingest_run_id
+    def __init__(self, ingest_run_dt: datetime, statecode: str):
         self.ingest_run_dt = ingest_run_dt
         self.historical_counts: HistoricalResults = {}
         self.data = structs.StateData()
@@ -92,14 +91,7 @@ class StateDataExporter:
             self.historical_counts,
         )
 
-    def get_filters(self) -> Tuple[str, List[Any]]:
-        """
-        Returns the election filters for this export.
-        Should return (sql, params)
-        """
-        return "level IN ('national', 'state', 'district', 'county')", []
-
-    def run_export(self) -> structs.StateData:
+    def run_export(self, preloaded_results: Iterable[SQLRecord]) -> structs.StateData:
         self.data = structs.StateData()
 
         sql_filter = "level = 'county' AND statepostal = %s"
@@ -107,9 +99,8 @@ class StateDataExporter:
         self.historical_counts = load_historicals(
             self.ingest_run_dt, sql_filter, filter_params
         )
-        for record in load_election_results(
-            self.ingest_run_id, sql_filter, filter_params
-        ):
+
+        def handle_record(record):
             if record.officeid == "P":
                 self.record_county_presidential_result(record)
             elif record.officeid == "S":
@@ -120,5 +111,9 @@ class StateDataExporter:
                 raise RuntimeError(
                     f"Uncategorizable result: {record.elex_id} {record.level} {record.officeid}"
                 )
+
+        for record in preloaded_results:
+            if record.statepostal == self.state:
+                handle_record(record)
 
         return self.data

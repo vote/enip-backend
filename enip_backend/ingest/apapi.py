@@ -7,10 +7,11 @@ from ..enip_common.config import AP_API_KEY, ELECTION_DATE, INGEST_TEST_DATA
 from ..export.helpers import sqlrecord_from_dict
 
 OFFICE_IDS = ["P", "S", "H"]
-RETURN_LEVELS = {"national", "state", "district"}
 
 
-def ingest_ap(cursor, ingest_id, save_to_db):
+def ingest_ap(
+    cursor, ingest_id, save_to_db, return_levels={"national", "state", "district"}
+):
     # Make the API request. We need to request both reporting-unit-level results,
     # which gives us everything except NE/ME congressional districts, and
     # district results for those few results.
@@ -58,7 +59,7 @@ def ingest_ap(cursor, ingest_id, save_to_db):
             if save_to_db:
                 writer.writerow(row.values())
 
-            if row["level"] in RETURN_LEVELS:
+            if row["level"] in return_levels:
                 return_data.append(sqlrecord_from_dict(row))
             n_rows += 1
 
