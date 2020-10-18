@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List, Iterable
+from typing import Any, Iterable, List
 
 from ..enip_common.states import AT_LARGE_HOUSE_STATES, DISTRICTS_BY_STATE
 from . import structs

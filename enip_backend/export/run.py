@@ -1,4 +1,5 @@
 import json
+import random
 import sys
 import traceback
 from concurrent.futures import ThreadPoolExecutor
@@ -15,7 +16,7 @@ from .national import NationalDataExporter
 from .schemas import national_schema, state_schema
 from .state import StateDataExporter
 
-THREADS = 2
+THREADS = 4
 
 
 def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path, export_name):
@@ -93,11 +94,18 @@ def export_all_states(ingest_run_id, ingest_run_dt, export_name):
     results = {}
 
     with ThreadPoolExecutor(max_workers=THREADS) as executor:
+        # Do the states in a random order so if the DB is overloaded and we're
+        # timing out regularly, we still eventually update all of the states
+        # (because if we time out and miss a few states, they'll probably
+        # go earlier in the next run)
+        states_list = list(STATES)
+        random.shuffle(states_list)
+
         state_futures = {
             state_code: executor.submit(
                 export_state, ingest_run_id, ingest_run_dt, state_code, export_name
             )
-            for state_code in STATES
+            for state_code in states_list
         }
 
         for state_code, future in state_futures.items():

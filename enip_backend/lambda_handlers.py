@@ -2,7 +2,7 @@ import sentry_sdk
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
 from .enip_common import config
-from .export.run import export_national, export_all_states, get_latest_ingest
+from .export.run import export_all_states, export_national, get_latest_ingest
 from .ingest.run import ingest_all
 
 if config.SENTRY_DSN:

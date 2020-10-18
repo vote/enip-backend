@@ -72,14 +72,17 @@ functions:
     handler: enip_backend.lambda_handlers.run
     events:
       - schedule: "rate(1 minute)"
-    timeout: 60
+    timeout: 55
     maximumRetryAttempts: 0
 
   run_states:
     handler: enip_backend.lambda_handlers.run_states
     events:
-      - schedule: "rate(5 minutes)"
-    timeout: 300
+      - schedule: "rate(3 minutes)"
+
+    # Time out in a little less than 3 minutes so if we're overloaded we don't
+    # end up stacking multiple invocations
+    timeout: 170
     maximumRetryAttempts: 0
 
 

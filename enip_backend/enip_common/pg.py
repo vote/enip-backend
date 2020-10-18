@@ -1,10 +1,10 @@
 from contextlib import contextmanager
 
+import psycopg2
 import psycopg2.extras
 import psycopg2.pool
-import psycopg2
 
-from ..enip_common.config import POSTGRES_URL, POSTGRES_RO_URL
+from ..enip_common.config import POSTGRES_RO_URL, POSTGRES_URL
 
 
 @contextmanager
