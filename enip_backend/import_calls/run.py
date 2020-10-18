@@ -43,7 +43,7 @@ def _process_worksheet(sheet, worksheet_title):
     wks = sheet.worksheet_by_title(worksheet_title)
     publish_default_cells = wks.get_values(*PUBLISH_DEFAULT_RANGE)[0]
     if publish_default_cells[0] != "Default":
-        raise Exception("Worksheet {} does not match the expect format", worksheet_title)
+        raise Exception("Worksheet {} does not match the expected format".format(worksheet_title))
     default_is_publish = publish_default_cells[1] == "Publish"
 
     def _handle_published(value):
