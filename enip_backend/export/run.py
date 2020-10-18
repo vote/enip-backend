@@ -1,10 +1,12 @@
 import json
+import logging
 import random
 import sys
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 import sentry_sdk
+from ddtrace import tracer
 from jsonschema import validate
 
 from ..enip_common import s3
@@ -53,42 +55,50 @@ def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path, export_n
     return was_different, cdn_url
 
 
+@tracer.wrap("enip.export.export_state")
 def export_state(ingest_run_dt, state_code, ingest_data):
-    data = StateDataExporter(ingest_run_dt, state_code).run_export(ingest_data)
+    with tracer.trace("enip.export.export_state.run_export"):
+        data = StateDataExporter(ingest_run_dt, state_code).run_export(ingest_data)
 
-    return export_to_s3(
-        0,
-        ingest_run_dt,
-        data.json(by_alias=True),
-        state_schema,
-        f"states/{state_code}",
-        ingest_run_dt.strftime("%Y%m%d%H%M%S"),
-    )
+    with tracer.trace("enip.export.export_state.export_to_s3"):
+        return export_to_s3(
+            0,
+            ingest_run_dt,
+            data.json(by_alias=True),
+            state_schema,
+            f"states/{state_code}",
+            ingest_run_dt.strftime("%Y%m%d%H%M%S"),
+        )
 
 
+@tracer.wrap("enip.export.export_national")
 def export_national(ingest_run_id, ingest_run_dt, export_name, ingest_data=None):
-    print("Running national export...")
-    data = NationalDataExporter(ingest_run_id, ingest_run_dt).run_export(ingest_data)
+    logging.info("Running national export...")
+    with tracer.trace("enip.export.export_ntl.run_export"):
+        data = NationalDataExporter(ingest_run_id, ingest_run_dt).run_export(
+            ingest_data
+        )
 
-    was_different, cdn_url = export_to_s3(
-        ingest_run_id,
-        ingest_run_dt,
-        data.json(by_alias=True),
-        national_schema,
-        "national",
-        export_name,
-    )
+    with tracer.trace("enip.export.export_ntl.export_to_s3"):
+        was_different, cdn_url = export_to_s3(
+            ingest_run_id,
+            ingest_run_dt,
+            data.json(by_alias=True),
+            national_schema,
+            "national",
+            export_name,
+        )
 
     if was_different:
-        print(f"  National export completed WITH new results: {cdn_url}")
+        logging.info(f"  National export completed WITH new results: {cdn_url}")
     else:
-        print(f"  National export completed WITHOUT new results: {cdn_url}")
+        logging.info(f"  National export completed WITHOUT new results: {cdn_url}")
 
     return cdn_url
 
 
 def export_all_states(ap_data, ingest_run_dt):
-    print(f"Running all state exports from ingest at {str(ingest_run_dt)}...")
+    logging.info(f"Running all state exports from ingest at {str(ingest_run_dt)}...")
     any_failed = False
     results = {}
 
@@ -111,19 +121,19 @@ def export_all_states(ap_data, ingest_run_dt):
             try:
                 was_different, cdn_url = future.result()
                 if future.result():
-                    print(
+                    logging.info(
                         f"  Export {state_code} completed WITH new results: {cdn_url}"
                     )
                 else:
-                    print(
+                    logging.info(
                         f"  Export {state_code} completed WITHOUT new results: {cdn_url}"
                     )
 
                 results[state_code] = cdn_url
 
             except Exception as e:
-                print(f"  Export {state_code} failed")
-                traceback.print_exception(*sys.exc_info())
+                logging.info(f"  Export {state_code} failed")
+                traceback.logging.info_exception(*sys.exc_info())
 
                 sentry_sdk.capture_exception(e)
 

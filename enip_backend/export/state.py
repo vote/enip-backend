@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Any, Iterable, List
 
+from ddtrace import tracer
+
 from ..enip_common.states import AT_LARGE_HOUSE_STATES
 from . import structs
 from .helpers import (
@@ -96,9 +98,11 @@ class StateDataExporter:
 
         sql_filter = "level = 'county' AND statepostal = %s"
         filter_params: List[Any] = [self.state]
-        self.historical_counts = load_historicals(
-            self.ingest_run_dt, sql_filter, filter_params
-        )
+
+        with tracer.trace("enip.export.state.historicals"):
+            self.historical_counts = load_historicals(
+                self.ingest_run_dt, sql_filter, filter_params
+            )
 
         def handle_record(record):
             if record.officeid == "P":

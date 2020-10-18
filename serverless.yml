@@ -21,6 +21,9 @@ custom:
   datadog:
     forwarder: "${ssm:/shared/enip/datadog_forwarder_arn~true}"
     flushMetricsToLogs: true
+    addLayers: true
+    logLevel: 'INFO'
+    enableDDTracing: true
 
   prune:
     automatic: true
@@ -70,19 +73,19 @@ plugins:
 functions:
   run:
     handler: enip_backend.lambda_handlers.run
-    events:
-      - schedule: "rate(1 minute)"
-    timeout: 55
+    # events:
+    #   - schedule: "rate(5 minutes)"
+    timeout: 290
     maximumRetryAttempts: 0
 
   run_states:
     handler: enip_backend.lambda_handlers.run_states
-    events:
-      - schedule: "rate(3 minutes)"
+    # events:
+    #   - schedule: "rate(15 minutes)"
 
     # Time out in a little less than 3 minutes so if we're overloaded we don't
     # end up stacking multiple invocations
-    timeout: 170
+    timeout: 890
     maximumRetryAttempts: 0
 
 

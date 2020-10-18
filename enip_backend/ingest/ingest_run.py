@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta, timezone
 
 WAYPOINT_INTERVALS = [
@@ -40,20 +41,22 @@ def insert_ingest_run(cursor):
     for (last_waypoint, (col_name, interval)) in zip(
         cursor.fetchone(), WAYPOINT_INTERVALS
     ):
-        print(f"{col_name}")
-        print(f"  Previous waypoint: {last_waypoint}")
+        logging.info(f"{col_name}")
+        logging.info(f"  Previous waypoint: {last_waypoint}")
 
         # Determine if this run is a new waypoint -- if there are no runs for
         # the current waypoint
         current_waypoint = get_waypoint_for_dt(now, interval)
-        print(f"  Current waypoint: {current_waypoint}")
+        logging.info(f"  Current waypoint: {current_waypoint}")
 
         if not last_waypoint or (current_waypoint > last_waypoint):
-            print(f"    -> This ingest run will be a new waypoint for {col_name}")
+            logging.info(
+                f"    -> This ingest run will be a new waypoint for {col_name}"
+            )
             waypoint_dt = current_waypoint
             waypoint_names.append(col_name)
         else:
-            print(f"    -> This ingest run is not a new waypoint for {col_name}")
+            logging.info(f"    -> This ingest run is not a new waypoint for {col_name}")
             waypoint_dt = None
 
         waypoint_dts.append(waypoint_dt)
