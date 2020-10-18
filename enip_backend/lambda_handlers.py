@@ -1,8 +1,11 @@
+from datetime import datetime, timezone
+
 import sentry_sdk
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
 from .enip_common import config
-from .export.run import export_all_states, export_national, get_latest_ingest
+from .export.run import export_all_states, export_national
+from .ingest.apapi import ingest_ap
 from .ingest.run import ingest_all
 
 if config.SENTRY_DSN:
@@ -21,8 +24,11 @@ def run(event, context):
 
 
 def run_states(event, context):
-    ingest_id, ingest_dt = get_latest_ingest()
-    export_all_states(ingest_id, ingest_dt, ingest_dt.strftime("%Y%m%d%H%M%S"))
+    ingest_dt = datetime.now(tz=timezone.utc)
+    ap_data = ingest_ap(
+        cursor=None, ingest_id=-1, save_to_db=False, return_levels={"county"}
+    )
+    export_all_states(ap_data, ingest_dt)
 
 
 if __name__ == "__main__":

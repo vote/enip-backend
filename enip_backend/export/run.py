@@ -3,7 +3,6 @@ import random
 import sys
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
 
 import sentry_sdk
 from jsonschema import validate
@@ -54,16 +53,16 @@ def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path, export_n
     return was_different, cdn_url
 
 
-def export_state(ingest_run_id, ingest_run_dt, state_code, export_name):
-    data = StateDataExporter(ingest_run_id, ingest_run_dt, state_code).run_export()
+def export_state(ingest_run_dt, state_code, ingest_data):
+    data = StateDataExporter(ingest_run_dt, state_code).run_export(ingest_data)
 
     return export_to_s3(
-        ingest_run_id,
+        0,
         ingest_run_dt,
         data.json(by_alias=True),
         state_schema,
         f"states/{state_code}",
-        export_name,
+        ingest_run_dt.strftime("%Y%m%d%H%M%S"),
     )
 
 
@@ -88,8 +87,8 @@ def export_national(ingest_run_id, ingest_run_dt, export_name, ingest_data=None)
     return cdn_url
 
 
-def export_all_states(ingest_run_id, ingest_run_dt, export_name):
-    print(f"Running all state exports from ingest {ingest_run_id}...")
+def export_all_states(ap_data, ingest_run_dt):
+    print(f"Running all state exports from ingest at {str(ingest_run_dt)}...")
     any_failed = False
     results = {}
 
@@ -103,7 +102,7 @@ def export_all_states(ingest_run_id, ingest_run_dt, export_name):
 
         state_futures = {
             state_code: executor.submit(
-                export_state, ingest_run_id, ingest_run_dt, state_code, export_name
+                export_state, ingest_run_dt, state_code, ap_data
             )
             for state_code in states_list
         }
@@ -123,7 +122,7 @@ def export_all_states(ingest_run_id, ingest_run_dt, export_name):
                 results[state_code] = cdn_url
 
             except Exception as e:
-                print(f"  Export {export_name} failed")
+                print(f"  Export {state_code} failed")
                 traceback.print_exception(*sys.exc_info())
 
                 sentry_sdk.capture_exception(e)
@@ -143,11 +142,3 @@ def get_latest_ingest():
         res = cursor.fetchone()
 
         return res.ingest_id, res.ingest_dt
-
-
-if __name__ == "__main__":
-    ingest_id, ingest_dt = get_latest_ingest()
-
-    print(f"Exporting ingestion {ingest_id} from {ingest_dt}")
-    export_national(ingest_id, ingest_dt, datetime.now().strftime("%Y%m%d%H%M%S"))
-    export_all_states(ingest_id, ingest_dt, datetime.now().strftime("%Y%m%d%H%M%S"))
