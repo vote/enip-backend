@@ -8,7 +8,7 @@ from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 from .enip_common import config
 from .export.run import export_all_states, export_national
 from .ingest.apapi import ingest_ap
-from .calls_gsheet_sync.run import import_calls_gsheet
+from .calls_gsheet_sync.run import sync_calls_gsheet
 from .ingest.run import ingest_all
 
 logging.getLogger().setLevel(logging.INFO)
@@ -43,10 +43,11 @@ def run_states(event, context):
             export_all_states(ap_data, ingest_dt)
 
 
+def run_sync_calls_gsheet(event, context):
+    sync_calls_gsheet()
+
+
 if __name__ == "__main__":
     run(None, None)
     run_states(None, None)
-
-
-def run_import_calls(event, context):
-    import_calls_gsheet()
+    run_sync_calls_gsheet(None, None)

@@ -88,11 +88,11 @@ functions:
     # end up stacking multiple invocations
     timeout: 170
     maximumRetryAttempts: 0
-  calls_import:
-    handler: enip_backend.lambda_handlers.run_import_calls
+  run_sync_calls_gsheet:
+    handler: enip_backend.lambda_handlers.run_sync_calls_gsheet
     events:
-      - schedule: "rate(5 minutes)"
-    timeout: 60
+      - schedule: "rate(1 minute)"
+    timeout: 55
 
 
 package:

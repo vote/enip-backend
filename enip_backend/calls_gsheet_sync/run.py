@@ -71,7 +71,7 @@ def _update_db_published_from_sheet(cursor, table, worksheet):
     cursor.executemany(statement, rows)
 
 
-def import_calls_gsheet():
+def sync_calls_gsheet():
     client = get_gsheets_client()
     sheet = client.open_by_key(CALLS_GSHEET_ID)
     senate_sheet = sheet.worksheet_by_title("Senate Calls")
@@ -87,4 +87,4 @@ def import_calls_gsheet():
 
 
 if __name__ == '__main__':
-    import_calls_gsheet()
+    sync_calls_gsheet()
