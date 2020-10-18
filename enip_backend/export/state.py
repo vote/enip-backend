@@ -80,7 +80,7 @@ class StateDataExporter:
         if county not in self.data.counties:
             self.data.counties[county] = structs.County()
 
-        # Initialize the senate result
+        # Initialize the house result
         if seat not in self.data.counties[county].H:
             self.data.counties[county].H[seat] = structs.CountyCongressionalResult()
 
