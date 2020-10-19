@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime, timezone
 
 from ..enip_common.pg import get_ro_cursor
@@ -20,11 +21,11 @@ def export_bulk():
 
         ingests = [(res.ingest_id, res.ingest_dt) for res in cursor]
 
-    print(f"Running {len(ingests)} exports...")
+    logging.info(f"Running {len(ingests)} exports...")
 
     summary = []
     for i, (ingest_id, ingest_dt) in enumerate(ingests):
-        print(f"[[[ INGEST {i+1} OF {len(ingests)} ]]]")
+        logging.info(f"[[[ INGEST {i+1} OF {len(ingests)} ]]]")
 
         summary.append(
             {

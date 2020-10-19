@@ -1,4 +1,5 @@
 import json
+import logging
 import os.path
 
 import boto3
@@ -17,7 +18,7 @@ def read_json(path):
         response = s3.get_object(Bucket=S3_BUCKET, Key=os.path.join(S3_PREFIX, path))
     except ClientError as ex:
         if ex.response["Error"]["Code"] == "NoSuchKey":
-            print("No latest file")
+            logging.warning("No latest file")
             return None
         else:
             raise

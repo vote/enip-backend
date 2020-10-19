@@ -21,6 +21,9 @@ custom:
   datadog:
     forwarder: "${ssm:/shared/enip/datadog_forwarder_arn~true}"
     flushMetricsToLogs: true
+    addLayers: true
+    logLevel: 'INFO'
+    enableDDTracing: true
 
   prune:
     automatic: true
