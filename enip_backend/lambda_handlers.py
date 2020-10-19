@@ -45,11 +45,13 @@ def run_states(event, context):
 
 
 def run_sync_calls_gsheet(event, context):
-    sync_calls_gsheet()
+    with tracer.trace("enip.run_sync_calls_gsheet"):
+        sync_calls_gsheet()
 
 
 def run_sync_comments_gsheet(event, context):
-    sync_comments_gsheet()
+    with tracer.trace("enip.run_sync_comments_gsheet"):
+        sync_comments_gsheet()
 
 
 if __name__ == "__main__":

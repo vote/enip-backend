@@ -49,9 +49,9 @@ def ingest_all(force_save=False):
         # Fetch the AP results
         save_to_db = force_save or ("waypoint_15_dt" in waypoint_names)
         ingest_data = ingest_ap(cursor, ingest_id, save_to_db=save_to_db)
-        print("Updating president calls in db")
+        logging.info("Updating president calls in db")
         update_president_calls(cursor, ingest_data)
-        print("Updating senate calls in db")
+        logging.info("Updating senate calls in db")
         update_senate_calls(cursor, ingest_data)
         logging.info("Comitting...")
 

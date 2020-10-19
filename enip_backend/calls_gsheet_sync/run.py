@@ -1,3 +1,5 @@
+import logging
+
 import psycopg2
 from pytz import timezone
 
@@ -30,7 +32,7 @@ def _update_calls_sheet_from_db(cursor, table, worksheet):
             call = db_call["call"]
             ap_call_cell = row["AP Call"]
             if ap_call_cell.value != call:
-                print(f"Updating AP Call {state}: {call}")
+                logging.info(f"Updating AP Call {state}: {call}")
                 ap_call_cell.set_value(call)
 
             called_at_fmt = (
@@ -38,7 +40,7 @@ def _update_calls_sheet_from_db(cursor, table, worksheet):
             )
             ap_called_at_cell = row["AP Called At (ET)"]
             if ap_called_at_cell.value != called_at_fmt:
-                print(f"Updating AP Called At {state}: {called_at_fmt}")
+                logging.info(f"Updating AP Called At {state}: {called_at_fmt}")
                 ap_called_at_cell.set_value(called_at_fmt)
 
 
@@ -76,13 +78,13 @@ def sync_calls_gsheet():
     senate_sheet = sheet.worksheet_by_title("Senate Calls")
     president_sheet = sheet.worksheet_by_title("President Calls")
     with psycopg2.connect(POSTGRES_URL) as conn, conn.cursor() as cur:
-        print("Syncing calls from the db to google sheets")
+        logging.info("Syncing calls from the db to google sheets")
         _update_calls_sheet_from_db(cur, "senate_calls", senate_sheet)
         _update_calls_sheet_from_db(cur, "president_calls", president_sheet)
-        print("Syncing publish settings from sheets to the db")
+        logging.info("Syncing publish settings from sheets to the db")
         _update_db_published_from_sheet(cur, "senate_calls", senate_sheet)
         _update_db_published_from_sheet(cur, "president_calls", president_sheet)
-    print("Sync complete")
+    logging.info("Sync complete")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 import psycopg2
@@ -58,7 +59,7 @@ def sync_comments_gsheet():
     client = get_gsheets_client()
     sheet = client.open_by_key(COMMENTS_GSHEET_ID)
     data = get_worksheet_data(sheet.worksheet_by_title(WORKSHEET_TITLE), RANGE)
-    print("Syncing comments gsheet")
+    logging.info("Syncing comments gsheet")
     # TODO: this fails fast if any of the rows is invalid, we might want to skip instead
     db_rows = [_map_sheet_row_to_db(row) for row in data]
 
@@ -69,7 +70,7 @@ def sync_comments_gsheet():
     with psycopg2.connect(POSTGRES_URL) as conn, conn.cursor() as cursor:
         cursor.execute("DELETE FROM comments")
         cursor.executemany(insert_stmt, db_rows)
-    print("Comments sync complete")
+    logging.info("Comments sync complete")
 
 
 if __name__ == "__main__":
