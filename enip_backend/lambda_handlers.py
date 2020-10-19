@@ -5,6 +5,8 @@ import sentry_sdk
 from ddtrace import patch_all, tracer
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
+from .calls_gsheet_sync.run import sync_calls_gsheet
+from .comments_gsheet_sync.run import sync_comments_gsheet
 from .enip_common import config
 from .export.run import export_all_states, export_national
 from .ingest.apapi import ingest_ap
@@ -42,6 +44,18 @@ def run_states(event, context):
             export_all_states(ap_data, ingest_dt)
 
 
+def run_sync_calls_gsheet(event, context):
+    with tracer.trace("enip.run_sync_calls_gsheet"):
+        sync_calls_gsheet()
+
+
+def run_sync_comments_gsheet(event, context):
+    with tracer.trace("enip.run_sync_comments_gsheet"):
+        sync_comments_gsheet()
+
+
 if __name__ == "__main__":
     run(None, None)
     run_states(None, None)
+    run_sync_calls_gsheet(None, None)
+    run_sync_comments_gsheet(None, None)

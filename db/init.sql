@@ -112,9 +112,7 @@ CREATE INDEX IF NOT EXISTS ap_result_lastupdated_idx
 CREATE INDEX IF NOT EXISTS ap_result_ingest_id_idx
   ON ap_result (ingest_id);
 
-
 -- Drop 5/10 min waypoint and just use a 15-minute one
-
 ALTER TABLE ingest_run
 DROP COLUMN IF EXISTS waypoint_10_dt;
 
@@ -126,3 +124,26 @@ ADD COLUMN IF NOT EXISTS waypoint_15_dt TIMESTAMPTZ UNIQUE;
 
 CREATE INDEX IF NOT EXISTS ingest_run_waypoint_15_dt_idx
   ON ingest_run (waypoint_15_dt);
+
+CREATE TABLE IF NOT EXISTS senate_calls (
+  state TEXT PRIMARY KEY,
+  ap_call TEXT,
+  ap_called_at TIMESTAMPTZ,
+  published BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS president_calls (
+  state TEXT PRIMARY KEY,
+  ap_call TEXT,
+  ap_called_at TIMESTAMPTZ,
+  published BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+  ts TIMESTAMPTZ NOT NULL,
+  submitted_by TEXT NOT NULL,
+  office_id TEXT NOT NULL,
+  race TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL
+);
