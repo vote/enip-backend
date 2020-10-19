@@ -1,8 +1,7 @@
 import psycopg2
-
 from pytz import timezone
 
-from ..enip_common.config import POSTGRES_URL, CALLS_GSHEET_ID
+from ..enip_common.config import CALLS_GSHEET_ID, POSTGRES_URL
 from ..enip_common.gsheets import get_gsheets_client, get_worksheet_data
 
 DATA_RANGE = ("A", "D")

@@ -5,11 +5,11 @@ import sentry_sdk
 from ddtrace import patch_all, tracer
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
+from .calls_gsheet_sync.run import sync_calls_gsheet
+from .comments_gsheet_sync.run import sync_comments_gsheet
 from .enip_common import config
 from .export.run import export_all_states, export_national
 from .ingest.apapi import ingest_ap
-from .calls_gsheet_sync.run import sync_calls_gsheet
-from .comments_gsheet_sync.run import sync_comments_gsheet
 from .ingest.run import ingest_all
 
 logging.getLogger().setLevel(logging.INFO)

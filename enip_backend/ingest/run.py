@@ -23,22 +23,20 @@ def update_senate_calls(cursor, ingest_data):
             return "GA-S"
         return record.statepostal
 
-    winners = [(extract_state(record), record.party)
-               for record
-               in ingest_data
-               if record.officeid == "S"
-               and record.level == "state"
-               and record.winner]
+    winners = [
+        (extract_state(record), record.party)
+        for record in ingest_data
+        if record.officeid == "S" and record.level == "state" and record.winner
+    ]
     cursor.executemany(_calls_update_stmt("senate_calls"), winners)
 
 
 def update_president_calls(cursor, ingest_data):
-    winners = [(record.statepostal, record.party)
-               for record
-               in ingest_data
-               if record.officeid == "P"
-               and record.level == "state"
-               and record.winner]
+    winners = [
+        (record.statepostal, record.party)
+        for record in ingest_data
+        if record.officeid == "P" and record.level == "state" and record.winner
+    ]
     cursor.executemany(_calls_update_stmt("president_calls"), winners)
 
 

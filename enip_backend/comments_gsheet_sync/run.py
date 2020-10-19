@@ -3,7 +3,7 @@ from datetime import datetime
 import psycopg2
 from pytz import timezone
 
-from ..enip_common.config import POSTGRES_URL, COMMENTS_GSHEET_ID
+from ..enip_common.config import COMMENTS_GSHEET_ID, POSTGRES_URL
 from ..enip_common.gsheets import get_gsheets_client, get_worksheet_data
 
 RANGE = ("A", "H")
