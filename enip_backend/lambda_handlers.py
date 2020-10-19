@@ -9,6 +9,7 @@ from .enip_common import config
 from .export.run import export_all_states, export_national
 from .ingest.apapi import ingest_ap
 from .calls_gsheet_sync.run import sync_calls_gsheet
+from .comments_gsheet_sync.run import sync_comments_gsheet
 from .ingest.run import ingest_all
 
 logging.getLogger().setLevel(logging.INFO)
@@ -47,7 +48,12 @@ def run_sync_calls_gsheet(event, context):
     sync_calls_gsheet()
 
 
+def run_sync_comments_gsheet(event, context):
+    sync_comments_gsheet()
+
+
 if __name__ == "__main__":
     run(None, None)
     run_states(None, None)
     run_sync_calls_gsheet(None, None)
+    run_sync_comments_gsheet(None, None)

@@ -93,7 +93,11 @@ functions:
     events:
       - schedule: "rate(1 minute)"
     timeout: 55
-
+  run_sync_comments_gsheet:
+    handler: enip_backend.lambda_handlers.run_sync_comments_gsheet
+    events:
+      - schedule: "rate(1 minute)"
+    timeout: 55
 
 package:
   exclude:
