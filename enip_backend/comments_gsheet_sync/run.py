@@ -9,7 +9,6 @@ from ..enip_common.gsheets import get_gsheets_client, get_worksheet_data
 
 RANGE = ("A", "H")
 
-# TODO: finalize headers with @jasonkb
 TIMESTAMP_HEADER = "Timestamp"
 NAME_HEADER = "Your name (e.g. Luke Kastel)"
 OFFICE_HEADER = "Office (P for President, S for Senate, H for House)"
@@ -21,7 +20,6 @@ BODY_HEADER = "Body"
 
 WORKSHEET_TITLE = "Form Responses 1"
 
-# TODO: check with @jasonkb that this is the correct timezone
 TS_TZ = timezone("US/Eastern")
 TS_FMT = "%m/%d/%Y %H:%M:%S"
 

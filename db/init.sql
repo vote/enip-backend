@@ -139,12 +139,11 @@ CREATE TABLE IF NOT EXISTS president_calls (
   published BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- TODO: check schema with @jasonkb
 CREATE TABLE IF NOT EXISTS comments (
   ts TIMESTAMPTZ NOT NULL,
   submitted_by TEXT NOT NULL,
   office_id TEXT NOT NULL,
   race TEXT NOT NULL,
   title TEXT NOT NULL,
-  BODY TEXT NOT NULL
+  body TEXT NOT NULL
 );
