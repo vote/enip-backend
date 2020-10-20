@@ -52,22 +52,22 @@ def _update_db_published_from_sheet(cursor, table, worksheet):
         )
     default_is_publish = publish_default_cells[1] == "Publish"
 
-    def handle_published(value):
+    def handle_published(row):
+        value = row["Published?"].value
         if value == "Default":
             return default_is_publish
         return value == "Yes"
 
     sheet_data = get_worksheet_data(worksheet, DATA_RANGE, EXPECTED_DATA_HEADER)
     rows = [
-        (row["State"].value, handle_published(row["Published?"].value))
+        {"state": row["State"].value, "published": handle_published(row)}
         for row in sheet_data
     ]
-    # Note: published settings are updated for all states in the sheet, even those that don't have calls
+
     statement = f"""
-    INSERT INTO {table} (state, published)
-    VALUES (%s, %s)
-    ON CONFLICT (state) DO UPDATE
-    SET published = EXCLUDED.published
+    UPDATE {table}
+    SET published = %(published)s
+    WHERE state = %(state)s
     """
     cursor.executemany(statement, rows)
 
