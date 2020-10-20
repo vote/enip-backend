@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 import sentry_sdk
 from ddtrace import tracer
 from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 
 from ..enip_common import s3
 from ..enip_common.config import CDN_URL
@@ -23,7 +24,37 @@ THREADS = 4
 def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path, export_name):
     # Validate
     json_data_parsed = json.loads(json_data)
-    validate(instance=json_data_parsed, schema=schema)
+
+    try:
+        validate(instance=json_data_parsed, schema=schema)
+    except ValidationError as e:
+        # Write the invalid JSON to s3 for diagnostics
+        failed_cdn_url = "(failed to write to s3)"
+        try:
+            failed_name = f"{path}/failed/{export_name}_{ingest_run_id}.json"
+
+            s3.write_cacheable_json(failed_name, json_data)
+            failed_cdn_url = f"{CDN_URL}{failed_name}"
+        except:
+            logging.exception("Failed to save invalid JSON to S3")
+
+        error_msg = (
+            f"JSON failed schema validation: {e.message} -- logged to {failed_cdn_url}"
+        )
+        error_data = {
+            "validation_message": e.message,
+            "validator": e.validator,
+            "validator_value": e.validator_value,
+            "absolute_schema_path": list(e.absolute_schema_path),
+            "bad_json_url": failed_cdn_url,
+        }
+
+        with sentry_sdk.configure_scope() as scope:
+            scope.set_context("validation_error", error_data)
+            sentry_sdk.capture_exception(RuntimeError(error_msg))
+
+        logging.exception(error_msg, extra=error_data)
+        raise e
 
     # Write the JSON to s3
     name = f"{path}/{export_name}_{ingest_run_id}.json"
