@@ -66,6 +66,14 @@ provider:
       Action:
         - 's3:*'
       Resource: 'arn:aws:s3:::voteamerica-enip-data/*'
+    - Effect: 'Allow'
+      Action:
+        - 'ssm:GetParameter'
+      Resource: 'arn:aws:ssm:us-west-2:*:parameter/shared/enip/gsheets_service_account'
+    - Effect: 'Allow'
+      Action:
+        - 'kms:Decrypt'
+      Resource: 'arn:aws:kms:us-west-2:*:key/facb0cd4-8df6-4455-9b34-27849f2b3e3f'
 
 plugins:
   - serverless-python-requirements
