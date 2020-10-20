@@ -56,6 +56,6 @@ def run_sync_comments_gsheet(event, context):
 
 if __name__ == "__main__":
     run(None, None)
-    run_states(None, None)
+    # run_states(None, None)
     run_sync_calls_gsheet(None, None)
     run_sync_comments_gsheet(None, None)

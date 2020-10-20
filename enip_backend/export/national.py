@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Any, Iterable, List
+import logging
 
 from ddtrace import tracer
 
@@ -11,6 +12,8 @@ from .helpers import (
     handle_candidate_results,
     load_election_results,
     load_historicals,
+    load_comments,
+    load_calls,
 )
 
 
@@ -102,8 +105,8 @@ class NationalDataExporter:
         )
 
         # Handle a winner call
-        # TODO: check spreadsheet data for whether we're publishing this call
-        if record.winner:
+        if record.winner and self.calls["P"].get(state):
+            logging.info(f"Calling a presidential winner for CD {state}")
             party = structs.Party.from_ap(record.party)
 
             # mark them as the winner of the race
@@ -136,8 +139,9 @@ class NationalDataExporter:
         )
 
         # Handle a winner call
-        # TODO: check spreadsheet data for whether we're publishing this call
-        if record.winner:
+        if record.winner and self.calls["P"].get(state):
+            logging.info(f"Calling a presidential winner for {state}")
+
             party = structs.Party.from_ap(record.party)
 
             # mark them as the winner of the race
@@ -181,8 +185,9 @@ class NationalDataExporter:
         )
 
         # Handle a winner call
-        # TODO: check spreadsheet data for whether we're publishing this call
-        if record.winner:
+        if record.winner and self.calls["S"].get(state):
+            logging.info(f"Calling a senate winner for {state}")
+
             party = structs.Party.from_ap(record.party)
 
             # mark them as the winner of the race
@@ -245,6 +250,12 @@ class NationalDataExporter:
                 self.ingest_run_dt, sql_filter, filter_params
             )
 
+        with tracer.trace("enip.export.national.load_comments"):
+            self.comments = load_comments()
+
+        with tracer.trace("enip.export.national.load_calls"):
+            self.calls = load_calls()
+
         def handle_record(record):
             if record.level == "national":
                 self.record_ntl_result(record)
@@ -269,6 +280,21 @@ class NationalDataExporter:
                 self.ingest_run_id, sql_filter, filter_params
             ):
                 handle_record(record)
+
+        # Add commentary
+        for race, comment in self.comments["P"].items():
+            self.data.state_summaries[race].P.comments.append(comment)
+
+        for race, comment in self.comments["S"].items():
+            senate_data = self.data.state_summaries[race].S
+            if senate_data is None:
+                raise RuntimeError(f"Got a comment for nonexistant senate race {race}")
+
+            senate_data.comments.append(comment)
+
+        for race, comment in self.comments["H"].items():
+            state, seat = race.split("-")
+            self.data.state_summaries[state].H[seat].comments.append(comment)
 
         # Call the presidential winner
         pres_summary = self.data.national_summary.P
