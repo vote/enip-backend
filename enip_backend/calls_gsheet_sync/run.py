@@ -16,9 +16,7 @@ CALLED_AT_FMT = "%m/%d/%Y %H:%M:%S"
 
 
 def _update_calls_sheet_from_db(cursor, table, worksheet):
-    cursor.execute(
-        f"SELECT state, ap_call, ap_called_at FROM {table} WHERE ap_call IS NOT NULL"
-    )
+    cursor.execute(f"SELECT state, ap_call, ap_called_at FROM {table}")
     db_calls_lookup = {r[0]: {"call": r[1], "called_at": r[2]} for r in cursor}
     sheet_data = get_worksheet_data(worksheet, DATA_RANGE, EXPECTED_DATA_HEADER)
     # Selectively update cells that don't have the same api calls from the db
@@ -29,14 +27,16 @@ def _update_calls_sheet_from_db(cursor, table, worksheet):
         state = row["State"].value
         db_call = db_calls_lookup.get(state)
         if db_call:
-            call = db_call["call"]
+            call = db_call["call"] or ""
             ap_call_cell = row["AP Call"]
             if ap_call_cell.value != call:
                 logging.info(f"Updating AP Call {state}: {call}")
-                ap_call_cell.set_value(call)
+                ap_call_cell.set_value(call or "")
 
             called_at_fmt = (
                 db_call["called_at"].astimezone(CALLED_AT_TZ).strftime(CALLED_AT_FMT)
+                if db_call["called_at"]
+                else ""
             )
             ap_called_at_cell = row["AP Called At (ET)"]
             if ap_called_at_cell.value != called_at_fmt:

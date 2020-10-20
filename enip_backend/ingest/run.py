@@ -1,8 +1,7 @@
 import logging
 
 from ..enip_common.pg import get_cursor
-from ..enip_common.states import SENATE_RACES, PRESIDENTIAL_REPORTING_UNITS, DISTRICTS
-
+from ..enip_common.states import PRESIDENTIAL_REPORTING_UNITS, SENATE_RACES
 from .apapi import ingest_ap
 from .ingest_run import insert_ingest_run
 
@@ -14,8 +13,14 @@ def _calls_update_stmt(table):
     INSERT INTO {table} (state, ap_call, ap_called_at)
     VALUES (%s, %s, NOW())
     ON CONFLICT (state) DO UPDATE
-    SET (ap_call, ap_called_at) = (EXCLUDED.ap_call, NOW())
-    WHERE {table}.ap_call IS DISTINCT FROM EXCLUDED.ap_call
+    SET (ap_call, ap_called_at) = (
+        EXCLUDED.ap_call,
+        CASE
+            WHEN EXCLUDED.ap_call IS NULL THEN NULL
+            ELSE NOW()
+        END
+    )
+    WHERE {table}.ap_call IS DISTINCT FROM EXCLUDED.ap_call OR EXCLUDED.ap_call IS NULL
     """
 
 

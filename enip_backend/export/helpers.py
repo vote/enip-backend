@@ -268,4 +268,3 @@ def load_calls() -> Calls:
             calls["P"][record.state] = record.published
 
     return calls
-

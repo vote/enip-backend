@@ -1,6 +1,6 @@
+import logging
 from datetime import datetime
 from typing import Any, Iterable, List
-import logging
 
 from ddtrace import tracer
 
@@ -10,10 +10,10 @@ from .helpers import (
     HistoricalResults,
     SQLRecord,
     handle_candidate_results,
+    load_calls,
+    load_comments,
     load_election_results,
     load_historicals,
-    load_comments,
-    load_calls,
 )
 
 
