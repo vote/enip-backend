@@ -52,9 +52,9 @@ STATES = {
     "WY",
 }
 
-DISTRICTS = {"ME-1", "ME-2", "NE-1", "NE-2", "NE-3"}
+DISTRICTS = {"ME-01", "ME-02", "NE-01", "NE-02", "NE-03"}
 
-DISTRICTS_BY_STATE = {"ME": {"ME-1", "ME-2"}, "NE": {"NE-1", "NE-2", "NE-3"}}
+DISTRICTS_BY_STATE = {"ME": {"ME-01", "ME-02"}, "NE": {"NE-01", "NE-02", "NE-03"}}
 
 SENATE_SPECIALS = {"GA-S"}
 
@@ -62,4 +62,43 @@ SENATE_SPECIALS_BY_STATE = {"GA": {"GA-S"}}
 
 AT_LARGE_HOUSE_STATES = {"AK", "DE", "MT", "ND", "SD", "VT", "WY"}
 
+PRESIDENTIAL_REPORTING_UNITS = STATES | DISTRICTS
 ALL_REPORTING_UNITS = STATES | DISTRICTS | SENATE_SPECIALS
+
+SENATE_RACES = {
+    "AL",
+    "AK",
+    "AZ",
+    "AR",
+    "CO",
+    "DE",
+    "GA",
+    "GA-S",
+    "ID",
+    "IL",
+    "IA",
+    "KS",
+    "KY",
+    "LA",
+    "ME",
+    "MA",
+    "MI",
+    "MN",
+    "MS",
+    "MT",
+    "NE",
+    "NH",
+    "NJ",
+    "NM",
+    "NC",
+    "OK",
+    "OR",
+    "RI",
+    "SC",
+    "SD",
+    "TN",
+    "TX",
+    "VA",
+    "WV",
+    "WY",
+}

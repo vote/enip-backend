@@ -1,6 +1,7 @@
 import logging
 
 from ..enip_common.pg import get_cursor
+from ..enip_common.states import PRESIDENTIAL_REPORTING_UNITS, SENATE_RACES
 from .apapi import ingest_ap
 from .ingest_run import insert_ingest_run
 
@@ -12,8 +13,14 @@ def _calls_update_stmt(table):
     INSERT INTO {table} (state, ap_call, ap_called_at)
     VALUES (%s, %s, NOW())
     ON CONFLICT (state) DO UPDATE
-    SET (ap_call, ap_called_at) = (EXCLUDED.ap_call, NOW())
-    WHERE {table}.ap_call != EXCLUDED.ap_call
+    SET (ap_call, ap_called_at) = (
+        EXCLUDED.ap_call,
+        CASE
+            WHEN EXCLUDED.ap_call IS NULL THEN NULL
+            ELSE NOW()
+        END
+    )
+    WHERE {table}.ap_call IS DISTINCT FROM EXCLUDED.ap_call OR EXCLUDED.ap_call IS NULL
     """
 
 
@@ -23,21 +30,42 @@ def update_senate_calls(cursor, ingest_data):
             return "GA-S"
         return record.statepostal
 
-    winners = [
-        (extract_state(record), record.party)
-        for record in ingest_data
-        if record.officeid == "S" and record.level == "state" and record.winner
-    ]
-    cursor.executemany(_calls_update_stmt("senate_calls"), winners)
+    winners = {state: None for state in SENATE_RACES}
+    for record in ingest_data:
+        if record.officeid == "S" and record.level == "state" and record.winner:
+            winners[extract_state(record)] = record.party
+
+    cursor.executemany(
+        _calls_update_stmt("senate_calls"), [(k, v) for k, v in winners.items()]
+    )
 
 
 def update_president_calls(cursor, ingest_data):
-    winners = [
-        (record.statepostal, record.party)
-        for record in ingest_data
-        if record.officeid == "P" and record.level == "state" and record.winner
-    ]
-    cursor.executemany(_calls_update_stmt("president_calls"), winners)
+    def extract_state(record):
+        if record.level == "district":
+            if record.reportingunitname == "At Large":
+                return record.statepostal
+            elif record.reportingunitname == "District 1":
+                return f"{record.statepostal}-01"
+            elif record.reportingunitname == "District 2":
+                return f"{record.statepostal}-02"
+            elif record.reportingunitname == "District 3":
+                return f"{record.statepostal}-03"
+
+        return record.statepostal
+
+    winners = {state: None for state in PRESIDENTIAL_REPORTING_UNITS}
+    for record in ingest_data:
+        if (
+            record.officeid == "P"
+            and record.level in ("state", "district")
+            and record.winner
+        ):
+            winners[extract_state(record)] = record.party
+
+    cursor.executemany(
+        _calls_update_stmt("president_calls"), [(k, v) for k, v in winners.items()]
+    )
 
 
 def ingest_all(force_save=False):

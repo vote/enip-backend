@@ -230,3 +230,41 @@ def load_election_results(
 
         for record in cursor:
             yield record
+
+
+Comments = Dict[str, Dict[str, structs.Comment]]
+
+
+def load_comments() -> Comments:
+    comments: Comments = {"P": {}, "S": {}, "H": {}}
+    with get_cursor() as cursor:
+        cursor.execute("SELECT * FROM comments ORDER BY ts DESC")
+
+        for record in cursor:
+            office = comments[record.office_id]
+            office[record.race] = structs.Comment(
+                timestamp=record.ts,
+                author=record.submitted_by,
+                title=record.title,
+                body=record.body,
+            )
+
+    return comments
+
+
+Calls = Dict[str, Dict[str, bool]]
+
+
+def load_calls() -> Calls:
+    calls: Calls = {"P": {}, "S": {}}
+
+    with get_cursor() as cursor:
+        cursor.execute("SELECT * FROM senate_calls")
+        for record in cursor:
+            calls["S"][record.state] = record.published
+
+        cursor.execute("SELECT * FROM president_calls")
+        for record in cursor:
+            calls["P"][record.state] = record.published
+
+    return calls
