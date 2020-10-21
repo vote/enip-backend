@@ -86,7 +86,7 @@ def export_to_s3(ingest_run_id, ingest_run_dt, json_data, schema, path, export_n
     return was_different, cdn_url
 
 
-@tracer.wrap("enip.export.export_state")
+@tracer.wrap("enip.export.export_state", service="enip-backend-state-thread")
 def export_state(ingest_run_dt, state_code, ingest_data):
     with tracer.trace("enip.export.export_state.run_export"):
         data = StateDataExporter(ingest_run_dt, state_code).run_export(ingest_data)
