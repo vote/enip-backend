@@ -63,7 +63,7 @@ def _update_db_published_from_sheet(cursor, table, worksheet):
         {"state": row["State"].value, "published": handle_published(row)}
         for row in sheet_data
     ]
-
+    rows.sort(key=lambda r: r["state"])
     statement = f"""
     UPDATE {table}
     SET published = %(published)s
@@ -82,6 +82,8 @@ def sync_calls_gsheet():
         _update_calls_sheet_from_db(cur, "senate_calls", senate_sheet)
         _update_calls_sheet_from_db(cur, "president_calls", president_sheet)
         logging.info("Syncing publish settings from sheets to the db")
+        # Keep update order the same as ingest:
+        # Senate then President, sorted by state
         _update_db_published_from_sheet(cur, "senate_calls", senate_sheet)
         _update_db_published_from_sheet(cur, "president_calls", president_sheet)
     logging.info("Sync complete")

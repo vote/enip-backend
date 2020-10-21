@@ -35,9 +35,9 @@ def update_senate_calls(cursor, ingest_data):
         if record.officeid == "S" and record.level == "state" and record.winner:
             winners[extract_state(record)] = record.party
 
-    cursor.executemany(
-        _calls_update_stmt("senate_calls"), [(k, v) for k, v in winners.items()]
-    )
+    rows = [(k, v) for k, v in winners.items()]
+    rows.sort(key=lambda tup: tup[0])
+    cursor.executemany(_calls_update_stmt("senate_calls"), rows)
 
 
 def update_president_calls(cursor, ingest_data):
@@ -63,9 +63,9 @@ def update_president_calls(cursor, ingest_data):
         ):
             winners[extract_state(record)] = record.party
 
-    cursor.executemany(
-        _calls_update_stmt("president_calls"), [(k, v) for k, v in winners.items()]
-    )
+    rows = [(k, v) for k, v in winners.items()]
+    rows.sort(key=lambda tup: tup[0])
+    cursor.executemany(_calls_update_stmt("president_calls"), rows)
 
 
 def ingest_all(force_save=False):
@@ -77,10 +77,12 @@ def ingest_all(force_save=False):
         # Fetch the AP results
         save_to_db = force_save or ("waypoint_15_dt" in waypoint_names)
         ingest_data = ingest_ap(cursor, ingest_id, save_to_db=save_to_db)
-        logging.info("Updating president calls in db")
-        update_president_calls(cursor, ingest_data)
+        # keep update order the same as calls_gsheet_run:
+        # Senate then President, sorted by state
         logging.info("Updating senate calls in db")
         update_senate_calls(cursor, ingest_data)
+        logging.info("Updating president calls in db")
+        update_president_calls(cursor, ingest_data)
         logging.info("Comitting...")
 
     logging.info(f"All done! Completed ingest {ingest_id} at {ingest_dt}")
