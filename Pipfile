@@ -9,6 +9,8 @@ mypy = "*"
 black = "*"
 autoflake = "*"
 isort = "*"
+pytest = "*"
+pytest-mock = "*"
 
 [packages]
 elex = "*"
@@ -17,7 +19,8 @@ environs = "*"
 sentry-sdk = "*"
 pydantic = "*"
 pyhumps = "*"
-boto3 = "*"
+boto3 = "==1.14.63"
+botocore = "==1.17.63"
 jsonschema = "*"
 ddtrace = "*"
 pygsheets = "*"
@@ -32,6 +35,7 @@ isort = "isort --recursive enip_backend"
 black = "black enip_backend"
 mypy = "mypy enip_backend --strict-optional"
 format = "bash -c 'pipenv run autoflake && pipenv run isort && pipenv run black'"
+pytest = "pytest ./enip_backend/export"
 
 [pipenv]
 allow_prereleases = true
