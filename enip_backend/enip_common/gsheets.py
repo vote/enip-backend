@@ -22,7 +22,7 @@ def get_gsheets_client():
     return pygsheets.authorize(custom_credentials=credentials)
 
 
-@tracer.wrap("gsheets.get_worsheet_data", service="gsheets")
+@tracer.wrap("gsheets.get_worksheet_data", service="gsheets")
 def get_worksheet_data(worksheet, data_range, expected_header=None):
     """Read a range of cells from a worksheet into a list of dictionaries
     treating the first row as a header.
