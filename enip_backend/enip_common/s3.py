@@ -8,9 +8,7 @@ from botocore.exceptions import ClientError
 
 from .config import S3_BUCKET, S3_PREFIX
 
-client_config = botocore.config.Config(
-    max_pool_connections=50,
-)
+client_config = botocore.config.Config(max_pool_connections=50,)
 
 s3 = boto3.client("s3", config=client_config)
 

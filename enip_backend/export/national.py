@@ -282,19 +282,27 @@ class NationalDataExporter:
                 handle_record(record)
 
         # Add commentary
-        for race, comment in self.comments["P"].items():
-            self.data.state_summaries[race].P.comments.append(comment)
+        for race, comments in self.comments["P"].items():
+            for comment in comments:
+                self.data.state_summaries[race].P.comments.append(comment)
 
-        for race, comment in self.comments["S"].items():
-            senate_data = self.data.state_summaries[race].S
-            if senate_data is None:
-                raise RuntimeError(f"Got a comment for nonexistant senate race {race}")
+        for race, comments in self.comments["S"].items():
+            for comment in comments:
+                senate_data = self.data.state_summaries[race].S
+                if senate_data is None:
+                    raise RuntimeError(
+                        f"Got a comment for nonexistant senate race {race}"
+                    )
 
-            senate_data.comments.append(comment)
+                senate_data.comments.append(comment)
 
-        for race, comment in self.comments["H"].items():
-            state, seat = race.split("-")
-            self.data.state_summaries[state].H[seat].comments.append(comment)
+        for race, comments in self.comments["H"].items():
+            for comment in comments:
+                state, seat = race.split("-")
+                self.data.state_summaries[state].H[seat].comments.append(comment)
+
+        for comment in self.comments["N"]["N"]:
+            self.data.national_summary.comments.append(comment)
 
         # Call the presidential winner
         pres_summary = self.data.national_summary.P
