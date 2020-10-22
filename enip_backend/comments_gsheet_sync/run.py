@@ -5,7 +5,11 @@ import psycopg2
 from pytz import timezone
 
 from ..enip_common.config import COMMENTS_GSHEET_ID, POSTGRES_URL
-from ..enip_common.gsheets import get_gsheets_client, get_worksheet_data
+from ..enip_common.gsheets import (
+    get_gsheets_client,
+    get_worksheet_data,
+    worksheet_by_title,
+)
 
 RANGE = ("A", "H")
 
@@ -27,7 +31,9 @@ TS_FMT = "%m/%d/%Y %H:%M:%S"
 def _get(row, header, validate_truthy=True):
     val = row[header].value
     if validate_truthy and not val:
-        raise Exception(f"Missing value for {header}")
+        raise Exception(
+            f"Missing value for {header} in row {row.get(TIMESTAMP_HEADER)}"
+        )
     return val
 
 
@@ -40,8 +46,11 @@ def _map_sheet_row_to_db(r):
         race = _get(r, SENATE_HEADER)
     elif office == "H":
         race = _get(r, HOUSE_HEADER)
+    elif office == "N":
+        pass
     else:
         raise Exception("Office id must be P, S, or H")
+
     ts = datetime.strptime(_get(r, TIMESTAMP_HEADER), TS_FMT)
     return {
         "ts": TS_TZ.localize(ts),
@@ -56,13 +65,13 @@ def _map_sheet_row_to_db(r):
 def sync_comments_gsheet():
     client = get_gsheets_client()
     sheet = client.open_by_key(COMMENTS_GSHEET_ID)
-    data = get_worksheet_data(sheet.worksheet_by_title(WORKSHEET_TITLE), RANGE)
+    data = get_worksheet_data(worksheet_by_title(sheet, WORKSHEET_TITLE), RANGE)
     logging.info("Syncing comments gsheet")
     # TODO: this fails fast if any of the rows is invalid, we might want to skip instead
     db_rows = [_map_sheet_row_to_db(row) for row in data]
 
     insert_stmt = """
-    INSERT INTO comments (ts, submitted_by, office_id, race, title, body) 
+    INSERT INTO comments (ts, submitted_by, office_id, race, title, body)
     VALUES  (%(ts)s, %(submitted_by)s, %(office_id)s, %(race)s, %(title)s, %(body)s)
     """
     with psycopg2.connect(POSTGRES_URL) as conn, conn.cursor() as cursor:

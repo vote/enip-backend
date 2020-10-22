@@ -288,7 +288,7 @@
       "type": "object",
       "description": "National summary",
       "additionalProperties": false,
-      "required": ["P", "H", "S"],
+      "required": ["P", "H", "S", "comments"],
       "properties": {
         "P": {
           "$ref": "#/definitions/national_summary_p"
@@ -298,7 +298,8 @@
         },
         "H": {
           "$ref": "#/definitions/national_summary_winner_count"
-        }
+        },
+        "comments": {"$ref": "#/definitions/comments"}
       }
     },
     "stateSummaries": {

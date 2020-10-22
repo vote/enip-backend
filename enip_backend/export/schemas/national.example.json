@@ -58,7 +58,15 @@
       "oth": {
         "won": 0
       }
-    }
+    },
+    "comments": [
+      {
+        "timestamp": "2020-11-03T20:30:00Z",
+        "author": "Jason K-B",
+        "title": "Foo",
+        "body": "Bar *Baz*"
+      }
+    ]
   },
   "stateSummaries": {
     "MT": {

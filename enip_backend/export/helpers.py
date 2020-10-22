@@ -232,21 +232,30 @@ def load_election_results(
             yield record
 
 
-Comments = Dict[str, Dict[str, structs.Comment]]
+Comments = Dict[str, Dict[str, List[structs.Comment]]]
 
 
 def load_comments() -> Comments:
-    comments: Comments = {"P": {}, "S": {}, "H": {}}
+    comments: Comments = {"P": {}, "S": {}, "H": {}, "N": {"N": []}}
     with get_cursor() as cursor:
         cursor.execute("SELECT * FROM comments ORDER BY ts DESC")
 
         for record in cursor:
             office = comments[record.office_id]
-            office[record.race] = structs.Comment(
-                timestamp=record.ts,
-                author=record.submitted_by,
-                title=record.title,
-                body=record.body,
+
+            # "N" (national) comments don't have races
+            race = "N" if record.office_id == "N" else record.race
+
+            if race not in office:
+                office[race] = []
+
+            office[race].append(
+                structs.Comment(
+                    timestamp=record.ts,
+                    author=record.submitted_by,
+                    title=record.title,
+                    body=record.body,
+                )
             )
 
     return comments

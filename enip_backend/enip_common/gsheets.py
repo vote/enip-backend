@@ -2,11 +2,13 @@ import json
 
 import boto3
 import pygsheets
+from ddtrace import tracer
 from pygsheets.authorization import service_account
 
 from .config import GSHEET_API_CREDENTIALS_SSM_PATH
 
 
+@tracer.wrap("gsheets.get_gsheets_client", service="gsheets")
 def get_gsheets_client():
     """Get a pygsheets client using service account credentials stored in SSM"""
     ssm_param = boto3.client("ssm").get_parameter(
@@ -20,6 +22,7 @@ def get_gsheets_client():
     return pygsheets.authorize(custom_credentials=credentials)
 
 
+@tracer.wrap("gsheets.get_worksheet_data", service="gsheets")
 def get_worksheet_data(worksheet, data_range, expected_header=None):
     """Read a range of cells from a worksheet into a list of dictionaries
     treating the first row as a header.
@@ -36,3 +39,13 @@ def get_worksheet_data(worksheet, data_range, expected_header=None):
     if expected_header and header != expected_header:
         raise Exception(f"Sheet does not have the expected header: {expected_header}")
     return [{header[i]: row[i] for i in range(len(header))} for row in sheet_data[1:]]
+
+
+@tracer.wrap("gsheets.update_cell", service="gsheets")
+def update_cell(cell, value):
+    cell.set_value(value)
+
+
+@tracer.wrap("gsheets.worksheet_by_title", service="gsheets")
+def worksheet_by_title(sheet, title):
+    return sheet.worksheet_by_title(title)

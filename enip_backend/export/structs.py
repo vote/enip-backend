@@ -135,6 +135,7 @@ class NationalSummary(CamelModel):
     P: NationalSummaryPresident = Field(default_factory=NationalSummaryPresident)
     S: NationalSummaryWinnerCount = Field(default_factory=NationalSummaryWinnerCount)
     H: NationalSummaryWinnerCount = Field(default_factory=NationalSummaryWinnerCount)
+    comments: List[Comment] = []
 
 
 class NationalData(CamelModel):
