@@ -1,24 +1,11 @@
 distro: bionic
-language: python
-python:
-  - 3.7
+language: node_js
+node_js:
+  - 14
 install:
-  - pip install pipenv
+  - sudo apt-get update
+  - sudo apt-get install python3-pip python3-setuptools python3-wheel
+  - python3 -m pip install --user pipenv
   - pipenv install --dev
 script:
-  - autoflake -c --remove-unused-variables --remove-all-unused-imports --ignore-init-module-imports -i --recursive enip_backend
-  - black --check
-  - mypy enip_backend --strict-optional
-  - pytest ./enip_backend/export
-
-env:
-  global:
-    - "POSTGRES_URL=postgres://postgres:postgres@localhost/postgres"
-    - "INGEST_TEST_DATA=true"
-    - "ELECTION_DATE=2020-11-03"
-    - "AP_API_KEY=xxx"
-    - "S3_BUCKET=voteamerica-enip-data"
-    - "S3_PREFIX=local"
-    - "CALLS_GSHEET_ID=xxx"
-    - "COMMENTS_GSHEET_ID=xxx"
-    - "GSHEET_API_CREDENTIALS_SSM_PATH=/shared/enip/gsheets_service_account"
+  - pipenv run ci
