@@ -5,4 +5,4 @@ python:
 install:
   - pipenv install --dev
 script:
-  - pipenv run test
+  - pipenv run ci
