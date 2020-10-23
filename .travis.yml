@@ -8,4 +8,4 @@ install:
   - python3 -m pip install --user pipenv
   - pipenv install --dev
 script:
-  - pipenv run ci
+  - pipenv run pytest
