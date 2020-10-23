@@ -11,6 +11,7 @@ autoflake = "*"
 isort = "*"
 pytest = "*"
 pytest-mock = "*"
+pytest-cov = "*"
 
 [packages]
 elex = "*"
@@ -36,6 +37,8 @@ black = "black enip_backend"
 mypy = "mypy enip_backend --strict-optional"
 format = "bash -c 'pipenv run autoflake && pipenv run isort && pipenv run black'"
 pytest = "pytest ./enip_backend/export"
+pytest_cov = "pytest ./enip_backend/export --cov enip_backend --cov-report xml:cov.xml"
+ci = "bash -c 'pipenv run autoflake -c && pipenv run black --check && pipenv run mypy && pipenv run pytest'"
 
 [pipenv]
 allow_prereleases = true

@@ -1,0 +1,8 @@
+distro: bionic
+language: python
+python:
+  - 3.7
+install:
+  - pipenv install --dev
+script:
+  - pipenv run test
