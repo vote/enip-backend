@@ -105,6 +105,8 @@ class NationalDataExporter:
         )
 
         # Handle a winner call
+        print(record.winner)
+        print(self.calls)
         if record.winner and self.calls["P"].get(state):
             logging.info(f"Calling a presidential winner for CD {state}")
             party = structs.Party.from_ap(record.party)
