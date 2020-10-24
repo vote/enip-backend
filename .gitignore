@@ -2,6 +2,7 @@
 .env
 sample.csv
 bulk.json
+cov.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
