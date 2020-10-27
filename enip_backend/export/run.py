@@ -1,8 +1,6 @@
 import json
 import logging
 import random
-import sys
-import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 import sentry_sdk
