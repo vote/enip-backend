@@ -163,9 +163,7 @@ def export_all_states(ap_data, ingest_run_dt):
                 results[state_code] = cdn_url
 
             except Exception as e:
-                logging.info(f"  Export {state_code} failed")
-                traceback.logging.info_exception(*sys.exc_info())
-
+                logging.exception(f"  Export {state_code} failed")
                 sentry_sdk.capture_exception(e)
 
     if any_failed:
