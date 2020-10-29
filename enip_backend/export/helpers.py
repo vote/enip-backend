@@ -135,7 +135,7 @@ def load_historicals(
                 -- values. We report only the first value (as per the ORDER BY
                 -- below)
                 DISTINCT ON (elex_id, votecount)
-                ingest_run.waypoint_30_dt,
+                ingest_run.waypoint_15_dt,
                 ap_result.elex_id,
                 ap_result.votecount
             FROM ap_result
