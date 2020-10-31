@@ -4,6 +4,7 @@ from datetime import datetime
 
 import psycopg2
 from pytz import timezone
+import sentry_sdk
 
 from ..enip_common.config import COMMENTS_GSHEET_ID, POSTGRES_URL
 from ..enip_common.gsheets import (
@@ -70,6 +71,7 @@ def _map_sheet_row_to_db(r):
                 "body": _get(r, BODY_HEADER),
             }
     except Exception as err:
+        sentry_sdk.capture_exception(err)
         logging.error("Skipping. Exception: {}".format(err))
 
 
