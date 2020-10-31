@@ -1,4 +1,5 @@
 import logging
+from itertools import chain
 from datetime import datetime
 
 import psycopg2
@@ -38,28 +39,38 @@ def _get(row, header, validate_truthy=True):
 
 
 def _map_sheet_row_to_db(r):
-    office = _get(r, OFFICE_HEADER)
-    race = None
-    if office == "P":
-        race = _get(r, PRESIDENT_HEADER)
-    elif office == "S":
-        race = _get(r, SENATE_HEADER)
-    elif office == "H":
-        race = _get(r, HOUSE_HEADER)
-    elif office == "N":
-        pass
-    else:
-        raise Exception("Office id must be P, S, or H")
+    try:
+        office_and_race_list = []
+        office = _get(r, OFFICE_HEADER)
+        if office == "P":
+            office_and_race_list.append((office, _get(r, PRESIDENT_HEADER)))
+        elif office == "S":
+            office_and_race_list.append((office, _get(r, SENATE_HEADER)))
+        elif office == "PS":
+            state = _get(r, PRESIDENT_HEADER)
+            office_and_race_list.append(("P", state))
+            office_and_race_list.append(("S", state))
+            if state == "GA":
+                office_and_race_list.append(("S", "GA-S"))
+        elif office == "H":
+            office_and_race_list.append((office, _get(r, HOUSE_HEADER)))
+        elif office == "N":
+            office_and_race_list.append((office, None))
+        else:
+            logging.error("Skipping. Office id must be P, S, PS, N or H")
 
-    ts = datetime.strptime(_get(r, TIMESTAMP_HEADER), TS_FMT)
-    return {
-        "ts": TS_TZ.localize(ts),
-        "submitted_by": _get(r, NAME_HEADER),
-        "office_id": office,
-        "race": race,
-        "title": _get(r, TITLE_HEADER),
-        "body": _get(r, BODY_HEADER),
-    }
+        ts = datetime.strptime(_get(r, TIMESTAMP_HEADER), TS_FMT)
+        for (office_id, race) in office_and_race_list:
+            yield {
+                "ts": TS_TZ.localize(ts),
+                "submitted_by": _get(r, NAME_HEADER),
+                "office_id": office_id,
+                "race": race,
+                "title": _get(r, TITLE_HEADER),
+                "body": _get(r, BODY_HEADER),
+            }
+    except Exception as err:
+        logging.error("Skipping. Exception: {}".format(err))
 
 
 def sync_comments_gsheet():
@@ -68,7 +79,7 @@ def sync_comments_gsheet():
     data = get_worksheet_data(worksheet_by_title(sheet, WORKSHEET_TITLE), RANGE)
     logging.info("Syncing comments gsheet")
     # TODO: this fails fast if any of the rows is invalid, we might want to skip instead
-    db_rows = [_map_sheet_row_to_db(row) for row in data]
+    db_rows = chain(*[_map_sheet_row_to_db(row) for row in data])
 
     insert_stmt = """
     INSERT INTO comments (ts, submitted_by, office_id, race, title, body)
@@ -76,7 +87,7 @@ def sync_comments_gsheet():
     """
     with psycopg2.connect(POSTGRES_URL) as conn, conn.cursor() as cursor:
         cursor.execute("DELETE FROM comments")
-        cursor.executemany(insert_stmt, db_rows)
+        cursor.executemany(insert_stmt, list(db_rows))
     logging.info("Comments sync complete")
 
 
