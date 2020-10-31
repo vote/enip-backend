@@ -12,6 +12,7 @@ from ..enip_common.gsheets import (
     get_worksheet_data,
     worksheet_by_title,
 )
+from ..enip_common.states import SENATE_RACES
 
 RANGE = ("A", "H")
 
@@ -50,9 +51,10 @@ def _map_sheet_row_to_db(r):
         elif office == "PS":
             state = _get(r, PRESIDENT_HEADER)
             office_and_race_list.append(("P", state))
-            office_and_race_list.append(("S", state))
-            if state == "GA":
-                office_and_race_list.append(("S", "GA-S"))
+            if state in SENATE_RACES:
+                office_and_race_list.append(("S", state))
+                if state == "GA":
+                    office_and_race_list.append(("S", "GA-S"))
         elif office == "H":
             office_and_race_list.append((office, _get(r, HOUSE_HEADER)))
         elif office == "N":
