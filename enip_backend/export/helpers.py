@@ -140,12 +140,12 @@ def load_historicals(
                 ap_result.votecount
             FROM ap_result
             JOIN ingest_run ON ingest_run.ingest_id = ap_result.ingest_id
-            WHERE ingest_run.waypoint_30_dt IS NOT NULL
+            WHERE ingest_run.waypoint_15_dt IS NOT NULL
                 AND racetypeid = 'G'
                 AND ingest_dt < %s
                 AND ingest_dt > %s
                 AND {filter_sql}
-            ORDER BY elex_id, votecount, waypoint_30_dt ASC
+            ORDER BY elex_id, votecount, waypoint_15_dt ASC
             """,
             [ingest_run_dt, HISTORICAL_START] + filter_params,
         )
@@ -153,7 +153,7 @@ def load_historicals(
             if record.elex_id not in historical_counts:
                 historical_counts[record.elex_id] = {}
             historical_counts[record.elex_id][
-                str(record.waypoint_30_dt)
+                str(record.waypoint_15_dt)
             ] = record.votecount
 
     return historical_counts
