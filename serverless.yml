@@ -56,7 +56,7 @@ provider:
     GSHEET_API_CREDENTIALS_SSM_PATH: /shared/enip/gsheets_service_account
     CALLS_GSHEET_ID: ${ssm:/${self:custom.stage}/enip/calls_gsheet_id~true}
     COMMENTS_GSHEET_ID: ${ssm:/${self:custom.stage}/enip/comments_gsheet_id~true}
-    HISTORICAL_START: "2020-10-31T17:00:00Z"
+    HISTORICAL_START: "2020-11-02T118:00:00Z"
   memorySize: 3008
   iamRoleStatements:
     - Effect: 'Allow'
