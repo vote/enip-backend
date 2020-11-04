@@ -1,10 +1,10 @@
 import logging
-from itertools import chain
 from datetime import datetime
+from itertools import chain
 
 import psycopg2
-from pytz import timezone
 import sentry_sdk
+from pytz import timezone
 
 from ..enip_common.config import COMMENTS_GSHEET_ID, POSTGRES_URL
 from ..enip_common.gsheets import (

@@ -20,6 +20,7 @@ SQLRecord = NamedTuple(
         ("first", str),
         ("last", str),
         ("electtotal", int),
+        ("electwon", int),
         ("votecount", int),
         ("votepct", float),
         ("winner", bool),
@@ -43,6 +44,7 @@ def sqlrecord_from_dict(dict: Dict[str, Any]) -> SQLRecord:
         first=str(dict["first"]),
         last=str(dict["last"]),
         electtotal=int(dict["electtotal"]),
+        electwon=int(dict["electwon"]),
         votecount=int(dict["votecount"]),
         votepct=float(dict["votepct"]),
         winner=bool(dict["winner"]),
@@ -205,6 +207,10 @@ def load_election_results(
 
                 -- Electoral votes awarded in this race
                 electtotal,
+
+                -- Electoral votes won by this candidate. Used to work around a bug
+                -- in the AP's reporting of congressional district winners.
+                electwon,
 
                 -- Number of votes cast for this candidate
                 votecount,

@@ -56,10 +56,18 @@ def update_president_calls(cursor, ingest_data):
 
     winners = {state: None for state in PRESIDENTIAL_REPORTING_UNITS}
     for record in ingest_data:
+        # For state results, look at the "winner" property to determine who won
+        if record.officeid == "P" and record.level == "state" and record.winner:
+            winners[extract_state(record)] = record.party
+
+        # For congressional districts, the AP has a bug where the "winner"
+        # property reflects the at-large winner of the state rather than the
+        # district winner. The electwon property correctly reflects the
+        # district winner.
         if (
             record.officeid == "P"
-            and record.level in ("state", "district")
-            and record.winner
+            and record.level == "district"
+            and (record.electwon > 0)
         ):
             winners[extract_state(record)] = record.party
 

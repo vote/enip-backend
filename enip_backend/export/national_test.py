@@ -101,6 +101,7 @@ def res_p_national(
         first=first,
         last=last,
         electtotal=538,
+        electwon=0,
         votecount=votecount,
         votepct=votepct,
         winner=winner,
@@ -134,6 +135,7 @@ def res_p_state(
         first=first,
         last=last,
         electtotal=electtotal,
+        electwon=0,
         votecount=votecount,
         votepct=votepct,
         winner=winner,
@@ -147,6 +149,7 @@ def res_p_district(
     votecount,
     votepct,
     electtotal=1,
+    electwon=0,
     winner=False,
     first=None,
     last=None,
@@ -168,6 +171,7 @@ def res_p_district(
         first=first,
         last=last,
         electtotal=electtotal,
+        electwon=electwon,
         votecount=votecount,
         votepct=votepct,
         winner=winner,
@@ -203,6 +207,7 @@ def res_s(
         first=first,
         last=last,
         electtotal=1,
+        electwon=0,
         votecount=votecount,
         votepct=votepct,
         winner=winner,
@@ -234,6 +239,7 @@ def res_h(
         first=first,
         last=last,
         electtotal=1,
+        electwon=0,
         votecount=votecount,
         votepct=votepct,
         winner=winner,
@@ -286,6 +292,7 @@ def test_atlarge_me_prez_result(exporter):
                     first="Donald",
                     last="Trump",
                     electtotal=2,
+                    electwon=0,
                     votecount=12345,
                     votepct=0.234,
                     winner=False,
@@ -330,20 +337,32 @@ def test_me_01_prez_result(exporter):
 
 
 # NE-02 winner call, published
-def test_me_01_prez_call_published(exporter):
+def test_ne_02_prez_call_published(exporter):
     mock_calls["P"]["NE-02"] = True
 
     assert_result(
         exporter.run_export(
             [
                 res_p_national("Dem", votecount=67890, votepct=0.567),
+                res_p_national("GOP", votecount=67891, votepct=0.568),
+                # reproduce AP but where winner lies but electwon is correct
                 res_p_district(
                     "NE",
                     "District 2",
                     "Dem",
                     votecount=12345,
                     votepct=0.234,
+                    winner=False,
+                    electwon=1,
+                ),
+                res_p_district(
+                    "NE",
+                    "District 2",
+                    "GOP",
+                    votecount=12346,
+                    votepct=0.235,
                     winner=True,
+                    electwon=0,
                 ),
             ],
         ),
@@ -356,7 +375,14 @@ def test_me_01_prez_call_published(exporter):
                         pop_vote=67890,
                         pop_pct=0.567,
                         elect_won=1,
-                    )
+                    ),
+                    gop=structs.NationalSummaryPresidentCandidateNamed(
+                        first_name="Donald",
+                        last_name="Trump",
+                        pop_vote=67891,
+                        pop_pct=0.568,
+                        elect_won=0,
+                    ),
                 )
             ),
             state_summary(
@@ -368,6 +394,12 @@ def test_me_01_prez_call_published(exporter):
                             last_name="Biden",
                             pop_vote=12345,
                             pop_pct=0.234,
+                        ),
+                        gop=structs.StateSummaryCandidateNamed(
+                            first_name="Donald",
+                            last_name="Trump",
+                            pop_vote=12346,
+                            pop_pct=0.235,
                         ),
                         winner=structs.Party.DEM,
                     )
