@@ -105,7 +105,11 @@ class NationalDataExporter:
         )
 
         # Handle a winner call
-        if record.winner and self.calls["P"].get(state):
+        # IMPORTANT: The AP has a bug where the `winner` property of congressional
+        # districts is always set to the at-large winner of that state. We implement
+        # the AP's suggested workaround: to ignore the `winner` property of
+        # congressional districts and instead look at whether electwon is > 0.
+        if record.electwon > 0 and self.calls["P"].get(state):
             logging.info(f"Calling a presidential winner for CD {state}")
             party = structs.Party.from_ap(record.party)
 
@@ -113,7 +117,7 @@ class NationalDataExporter:
             self.data.state_summaries[state].P.winner = party
 
             # Give the candidate the electoral votes
-            self.grant_electoral_votes(party, record.electtotal)
+            self.grant_electoral_votes(party, record.electwon)
 
     def record_state_presidential_result(self, record: SQLRecord) -> None:
         """

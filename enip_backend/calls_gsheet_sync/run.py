@@ -1,6 +1,7 @@
 import logging
 
 import psycopg2
+from dateutil.parser import parse as parse_date
 from pytz import timezone
 
 from ..enip_common.config import CALLS_GSHEET_ID, POSTGRES_URL
@@ -44,7 +45,16 @@ def _update_calls_sheet_from_db(cursor, table, worksheet):
                 else ""
             )
             ap_called_at_cell = row["AP Called At (ET)"]
-            if ap_called_at_cell.value != called_at_fmt:
+
+            if (
+                ap_called_at_cell.value
+                and called_at_fmt
+                and parse_date(ap_called_at_cell.value) == parse_date(called_at_fmt)
+            ):
+                # We compare parsed dates so we're not sensitive to Google Sheets date
+                # formatting weirdness
+                pass
+            elif ap_called_at_cell.value != called_at_fmt:
                 logging.info(f"Updating AP Called At {state}: {called_at_fmt}")
                 update_cell(ap_called_at_cell, called_at_fmt)
 
