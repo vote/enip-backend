@@ -37,13 +37,13 @@ custom:
       run_sync_comments_gsheet: []
     prod:
       run:
-        - schedule: "rate(1 minute)"
+        - schedule: "rate(5 minutes)"
       run_states:
-        - schedule: "rate(3 minutes)"
+        - schedule: "rate(15 minutes)"
       run_sync_calls_gsheet:
-        - schedule: "rate(1 minute)"
+        - schedule: "rate(5 minutes)"
       run_sync_comments_gsheet:
-        - schedule: "rate(1 minute)"
+        - schedule: "rate(5 minutes)"
 
 provider:
   name: aws
@@ -101,7 +101,7 @@ functions:
   run:
     handler: enip_backend.lambda_handlers.run
     events: ${self:custom.schedule.${self:custom.stage}.run}
-    timeout: 55
+    timeout: 170
     maximumRetryAttempts: 0
 
   run_states:
@@ -110,16 +110,16 @@ functions:
 
     # Time out in a little less than 3 minutes so if we're overloaded we don't
     # end up stacking multiple invocations
-    timeout: 170
+    timeout: 850
     maximumRetryAttempts: 0
   run_sync_calls_gsheet:
     handler: enip_backend.lambda_handlers.run_sync_calls_gsheet
     events: ${self:custom.schedule.${self:custom.stage}.run_sync_calls_gsheet}
-    timeout: 55
+    timeout: 170
   run_sync_comments_gsheet:
     handler: enip_backend.lambda_handlers.run_sync_comments_gsheet
     events: ${self:custom.schedule.${self:custom.stage}.run_sync_comments_gsheet}
-    timeout: 55
+    timeout: 170
 
 package:
   exclude:
