@@ -100,13 +100,13 @@ plugins:
 functions:
   run:
     handler: enip_backend.lambda_handlers.run
-    events: ${self:custom.schedule.${self:custom.stage}.run}
+    # events: ${self:custom.schedule.${self:custom.stage}.run}
     timeout: 170
     maximumRetryAttempts: 0
 
   run_states:
     handler: enip_backend.lambda_handlers.run_states
-    events: ${self:custom.schedule.${self:custom.stage}.run_states}
+    # events: ${self:custom.schedule.${self:custom.stage}.run_states}
 
     # Time out in a little less than 3 minutes so if we're overloaded we don't
     # end up stacking multiple invocations
@@ -114,11 +114,11 @@ functions:
     maximumRetryAttempts: 0
   run_sync_calls_gsheet:
     handler: enip_backend.lambda_handlers.run_sync_calls_gsheet
-    events: ${self:custom.schedule.${self:custom.stage}.run_sync_calls_gsheet}
+    # events: ${self:custom.schedule.${self:custom.stage}.run_sync_calls_gsheet}
     timeout: 170
   run_sync_comments_gsheet:
     handler: enip_backend.lambda_handlers.run_sync_comments_gsheet
-    events: ${self:custom.schedule.${self:custom.stage}.run_sync_comments_gsheet}
+    # events: ${self:custom.schedule.${self:custom.stage}.run_sync_comments_gsheet}
     timeout: 170
 
 package:
